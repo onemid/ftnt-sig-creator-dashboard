@@ -17,8 +17,8 @@ const fields: LogFields = {
     realName: 'TZ',
     description: 'Timezone'
   },
-  seconds: {
-    realName: 'Duration',
+  duration: {
+    realName: 'Duration(in seconds)',
     description: 'Duration of the session, in seconds.'
   },
   sessionid: {
@@ -81,6 +81,10 @@ const fields: LogFields = {
     realName: 'Source Server',
     description: 'Server of the source.'
   },
+  srcintf: {
+    realName: 'Src Interface',
+    description: 'Interface of the traffic\'s source.'
+  },
   devid: {
     realName: 'Device ID',
     description: 'Serial number of the device for the traffic\'s origin.'
@@ -105,7 +109,7 @@ const fields: LogFields = {
     realName: 'Dst Name',
     description: 'Name of the destination.'
   },
-  dstinfrole: {
+  dstintfrole: {
     realName: 'Dst Interface Name',
     description: 'Name of the destination interface.'
   },
@@ -130,7 +134,7 @@ const fields: LogFields = {
     description: 'Risk level of the application.'
   },
   countapp: {
-    realName: 'countapp',
+    realName: 'Count App',
     description: 'Number of App Ctrl logs associated with the session.'
   },
   rcvdbyte: {
@@ -154,7 +158,11 @@ const fields: LogFields = {
     description: 'Status of the session. Uses following definitions:\r\n\t\t\t\t\t\tDeny: blocked by firewall policyStart: session start log (special option to enable logging at start of a session). This means firewall allowed.All Others: allowed by Firewall Policy and the status indicates how it was closed.'
   },
   policyid: {
-    realName: 'Policy',
+    realName: 'Policy ID',
+    description: 'ID of the firewall policy\r\ngoverning the traffic which caused\r\nthe log message.'
+  },
+  policyname: {
+    realName: 'Policy Name',
     description: 'Name of the firewall policy\r\ngoverning the traffic which caused\r\nthe log message.'
   },
   poluuid: {
@@ -178,7 +186,7 @@ const fields: LogFields = {
     description: 'Epoch time the log was triggered by FortiGate. If you convert the epoch time to human readable time, it might not match the Date and Time in the header owing to a small delay between the time the log was triggered and recorded. The Log Time field is the same for the same log among all log devices, but the Date and Time might differ.'
   },
   proto: {
-    realName: 'Protocol #',
+    realName: 'Protocol',
     description: 'tcp: The protocol used by web traffic (tcp by default)'
   },
   type: {
