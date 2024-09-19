@@ -292,10 +292,10 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
             <li
               v-for="prop in row.propVal"
               :key="prop.propName"
-              :class="['flex items-center justify-between py-1.5 pr-5 text-sm leading-6',
+              :class="['grid grid-cols-2 py-1.5 pr-5 text-sm leading-6',
                        prop.propName === '--pattern' || prop.propName === '--pcre' ? 'border-t-2 border-stone-300' : '']"
             >
-              <div class="flex w-0 flex-1 items-center">
+              <div class="flex items-center">
                 <svg
                   :class="['ml-1 h-1.5 w-1.5', prop.propName === '--pattern' || prop.propName === '--pcre' ? 'fill-sky-500' : 'fill-orange-400']"
                   viewBox="0 0 6 6"
@@ -310,8 +310,6 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
                 <div class="ml-2 flex min-w-0 flex-1 gap-2">
                   <span class="truncate font-bold font-mono">{{ prop.propName }}</span>
                 </div>
-              </div>
-              <div class="ml-4 flex-shrink-0">
                 <UBadge
                   v-if="(prop.propName === '--pattern' || prop.propName === '--pcre') && prop.propVal.trim().startsWith('!')"
                   color="red"
@@ -320,7 +318,7 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
                   label="NEGATIVE PATTERN"
                 />
               </div>
-              <div class="ml-4 flex-shrink-0">
+              <div class="ml-4">
                 <span
                   v-if="prop.propName === '--no_case'"
                 >
