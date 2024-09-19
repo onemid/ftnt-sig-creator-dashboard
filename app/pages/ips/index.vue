@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
+import { useSigsStore } from '~~/stores/signatures'
 
+const sigsStore = useSigsStore()
 const fileRef = ref<HTMLInputElement>()
 const isDeleteAccountModalOpen = ref(false)
 
@@ -22,20 +24,6 @@ function validate(state: any): FormError[] {
   if (!state.email) errors.push({ path: 'email', message: 'Please enter your email.' })
   if ((state.password_current && !state.password_new) || (!state.password_current && state.password_new)) errors.push({ path: 'password', message: 'Please enter a valid password.' })
   return errors
-}
-
-function onFileChange(e: Event) {
-  const input = e.target as HTMLInputElement
-
-  if (!input.files?.length) {
-    return
-  }
-
-  state.avatar = URL.createObjectURL(input.files[0])
-}
-
-function onFileClick() {
-  fileRef.value?.click()
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
@@ -152,10 +140,6 @@ const serviceOptions = [
 const selected = ref(options[0])
 const selectedService = ref(serviceOptions[0])
 const value = ref('')
-
-const makeSig = () => {
-
-}
 </script>
 
 <template>

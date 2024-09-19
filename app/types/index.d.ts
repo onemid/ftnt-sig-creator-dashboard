@@ -45,7 +45,52 @@ export interface Range {
 // Below is the ftnt sig
 
 export interface SigBody {
-  property: string
-  valueRepType: 'NEED_WRAP' | 'NO_NEED_WRAP'
-  value: string
+  propOrder: number
+  propName: string
+  propVal: string | SigBody[]
+}
+
+export interface SigStore {
+  signature: string
+  sigBody: SigBody[]
+  sigGroupedBody: SigBody[]
+}
+
+// Below is the fgt log
+
+export interface FgtLogBody {
+  propOrder: number
+  propName: string
+  propVal: string
+  propSearch: string
+}
+
+export interface FgtLog {
+  logOrder: number
+  logTime: number | null
+  log: FgtLogBody[]
+}
+
+export interface LogsStore {
+  logs: string
+  columns: Set<string>
+  parsedLogs: FgtLog[]
+}
+
+type LogField = {
+  realName: string
+  description: string
+}
+
+type LogFields = {
+  [key: string]: LogField
+}
+
+type LimitedOption = {
+  limit: string
+  options: string[]
+}
+
+type LimitedOptions = {
+  [key: string]: LimitedOption
 }

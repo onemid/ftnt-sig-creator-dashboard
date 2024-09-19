@@ -17,16 +17,16 @@ useHead({
   }
 })
 
-const title = 'Fortinet IPS/App Ctrl Signature'
-const description = 'Nuxt UI Pro is a collection of premium Vue components built on top of Nuxt UI to create beautiful & responsive Nuxt applications in minutes.'
+const title = 'Fortinet IPS/App Ctrl Utilities'
+const description = 'Fortinet IPS/App Ctrl Utilities'
 
 useSeoMeta({
   title,
   description,
   ogTitle: title,
   ogDescription: description,
-  ogImage: 'https://dashboard-template.nuxt.dev/social-card.png',
-  twitterImage: 'https://dashboard-template.nuxt.dev/social-card.png',
+  ogImage: 'https://www.fortinet.com/content/dam/fortinet/images/icons/fortinet-social-icon.jpg',
+  twitterImage: 'https://www.fortinet.com/content/dam/fortinet/images/icons/fortinet-social-icon.jpg',
   twitterCard: 'summary_large_image'
 })
 </script>
