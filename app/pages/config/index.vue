@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { TreeItem, TreeRoot } from 'radix-vue'
+import { Icon } from '@iconify/vue'
 import configParser from '~/utils/config_parser'
+import type { ConfigNode } from '~/types'
 
 const isConfigModalOpen = ref(false)
 const config = ref('')
+const configObj: Ref<ConfigNode[]> = ref([])
 
 const parsingConfig = () => {
-  console.log(JSON.stringify(configParser(config.value)))
+  configObj.value = configParser(config.value)
+  isConfigModalOpen.value = false
 }
 </script>
 
@@ -78,5 +83,46 @@ const parsingConfig = () => {
         </div>
       </template>
     </UCard>
+    <TreeRoot
+      v-if="configObj"
+      v-slot="{ flattenItems }"
+      class="list-none select-none w-full bg-white text-blackA11 rounded-lg p-2 text-sm font-medium mt-5"
+      :items="configObj"
+      :get-key="(item) => item.type + item.name"
+      :default-expanded="['components']"
+    >
+      <h2 class="font-semibold !text-base text-blackA11 px-2 pt-1">
+        FortiGate Configuration Structure
+      </h2>
+      <TreeItem
+        v-for="item in flattenItems"
+        v-slot="{ isExpanded }"
+        :key="item._id"
+        :style="{ 'padding-left': `${item.level - 0.5}rem` }"
+        v-bind="item.bind"
+        class="flex items-center py-1 px-2 my-0.5 rounded outline-none focus:ring-grass8 focus:ring-2 data-[selected]:bg-grass4"
+      >
+        <template v-if="item.hasChildren">
+          <Icon
+            v-if="!isExpanded"
+            icon="lucide:folder"
+            class="h-4 w-4"
+          />
+          <Icon
+            v-else
+            icon="lucide:folder-open"
+            class="h-4 w-4"
+          />
+        </template>
+        <Icon
+          v-else
+          :icon="item.value.icon || 'lucide:file'"
+          class="h-4 w-4"
+        />
+        <div class="pl-2">
+          {{ item.value.type }} {{ item.value.name }} {{ item.value.settings }}
+        </div>
+      </TreeItem>
+    </TreeRoot>
   </UDashboardPanelContent>
 </template>

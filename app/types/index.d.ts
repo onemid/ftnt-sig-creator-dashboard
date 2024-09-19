@@ -88,48 +88,11 @@ type LogFields = {
 
 // Below is the fgt config
 
-export interface FgtConfig {
-  configVersion: string
-  configFileVersion: string
-  buildno: string
-  globalVdom: string
-  configs: FgtConfigName[]
-}
-
-export interface FgtConfigName {
-  configNamespace: string
-  configName: string
-  configEditConfig: 'EDIT' | 'SET' | 'DIRECT'
-  configDetails: FgtEditBody | FgtSetBody[] | undefined
-}
-
-export interface FgtSubConfigName {
-  configName: string
-  configDetails: FgtEditBody | FgtSetBody[] | undefined
-}
-
-export interface FgtEditBody {
-  configName: string
-  configDetails: FgtEditBody[]
-  editName: string
-  settings: FgtSetBody[]
-  setKey: string
-  setVal: string[]
-}
-
-export interface FgtSetBody {
-  setKey: string
-  setVal: string[]
-}
-
-// Below is the config parser newer ver.
-
-export interface FgtConfigBody {
-  ks: string | undefined
-  k: string | undefined
-  vNest: FgtConfigBody[] | undefined
-  vTerm: string[] | undefined
-  directive: 'config' | 'set' | 'edit'
+export type ConfigNode = {
+  type: string
+  name: string
+  settings?: { [key: string]: string }
+  children?: ConfigNode[]
 }
 
 // Below is the gui option

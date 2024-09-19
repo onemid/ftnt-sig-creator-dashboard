@@ -1,12 +1,6 @@
-// Define a type for the configuration structure
-type ConfigNode = {
-  type: string
-  name: string
-  settings?: { [key: string]: string }
-  children?: ConfigNode[]
-}
-
 // Function to parse the configuration file into a structured format
+import type { ConfigNode } from '~/types'
+
 function configParser(fileContent: string): ConfigNode[] {
   // Read the file content
   const lines = fileContent.split('\n')

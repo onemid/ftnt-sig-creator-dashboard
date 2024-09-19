@@ -24,6 +24,7 @@
     "date-fns": "^3.6.0",
     "nuxt": "^3.13.1",
     "nuxt-monaco-editor": "^1.2.9",
+    "radix-vue": "^1.9.6",
     "v-calendar": "^3.1.2"
   },
   "devDependencies": {
