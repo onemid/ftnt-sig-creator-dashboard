@@ -172,7 +172,9 @@ const defaultFilter = () => {
     'srcip', 'dstip', 'srcport', 'dstport', 'service', 'app', 'sessionid', 'vd', 'attack']
   const tmp = []
   defaultFilterList.forEach((elem) => {
-    if (fields[elem]) {
+    if (fields[elem] && logsParsedColumns.value.findIndex((col) => {
+      return col.key === elem
+    }) !== -1) {
       tmp.push({
         key: elem,
         label: `${fields[elem].realName}\n(${elem})`,
