@@ -13,7 +13,7 @@ const modules = [{
 {
   title: 'Config Parser',
   description: 'Convert the config into the friendly view.',
-  to: '/logs',
+  to: '/config',
   icon: 'i-heroicons-cog'
 }, {
   title: 'Logs Preview',
