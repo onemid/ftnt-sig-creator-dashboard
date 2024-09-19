@@ -495,7 +495,7 @@ const clearFilter = () => {
             v-else
             color="white"
             class="font-bold gap-1 uppercase w-full justify-center"
-            variant="ghost"
+            variant="outline"
           >{{ row.action }}</UBadge>
         </span>
         <span v-else />

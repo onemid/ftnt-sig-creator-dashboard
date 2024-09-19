@@ -2,7 +2,9 @@ import type { FgtLog, FgtLogBody } from '~/types'
 
 const logParser = (log: string): FgtLog => {
   // Regular Expression break down: (--[A-Za-z\[\]\.\_\-0-9]+) *([^;]+)*;*
-  const regex = /([A-Za-z0-9]+) *= *("[^"]*"|[0-9:.-]+)*/gm
+  const regex = log.trimStart().startsWith('"')
+    ? /"([A-Za-z0-9]+) *= *("{1,2}[^"]*"{1,2}|[0-9:.-]+)"(?:\n|$|,)/g
+    : /([A-Za-z0-9]+) *= *("[^"]*"|[0-9:.-]+)*/gm
   let m
   const logBodyObject: FgtLogBody[] = []
 
@@ -23,7 +25,9 @@ const logParser = (log: string): FgtLog => {
       } else if (groupIndex === 1) {
         propName = match
       } else if (groupIndex === 2) {
-        if (match.startsWith('"') && match.endsWith('"')) {
+        if (match.startsWith('""') && match.endsWith('""')) {
+          propVal = match.slice(2, match.length - 2)
+        } else if (match.startsWith('"') && match.endsWith('"')) {
           propVal = match.slice(1, match.length - 1)
         } else {
           propVal = match
