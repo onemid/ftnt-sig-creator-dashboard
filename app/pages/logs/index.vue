@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import protos from '../../data/protos'
 import type { FgtLog, FgtLogBody } from '~/types'
 import { useLogsStore } from '~~/stores/logs'
 import fields from '~/data/fields'
@@ -165,7 +166,7 @@ const pageRows = computed(() => {
 })
 
 const defaultFilter = () => {
-  const defaultFilterList = ['date', 'time', 'type', 'subtype', 'level', 'action', 'utmaction', 'policyid', 'srcip', 'dstip', 'srcport', 'dstport', 'service', 'app', 'policytype', 'shapingpolicyid', 'vd', 'attack']
+  const defaultFilterList = ['date', 'time', 'proto', 'action', 'utmaction', 'policyid', 'policyname', 'policytype', 'srcip', 'dstip', 'srcport', 'dstport', 'service', 'app', 'sessionid', 'vd', 'attack']
   const tmp = []
   defaultFilterList.forEach((elem) => {
     if (fields[elem]) {
@@ -468,6 +469,29 @@ const selectRow = (row) => {
       }
       "
     >
+      <template
+        #proto-data="{ row }"
+      >
+        <span v-if="row.proto">
+          <UBadge
+            v-if="parseInt(row.proto) < protos.length"
+            :color="protos[parseInt(row.proto)].color"
+            :variant="protos[parseInt(row.proto)].variant"
+            class="font-bold gap-1 uppercase w-full justify-center"
+          >
+            {{ row.proto }}
+            {{ protos[parseInt(row.proto)].name }}
+          </UBadge>
+          <UBadge
+            v-else
+            color="green"
+            variant="outline"
+            class="font-bold gap-1 uppercase w-full justify-center"
+          >
+            {{ row.proto }}
+          </UBadge>
+        </span>
+      </template>
       <template
         #action-data="{ row }"
       >

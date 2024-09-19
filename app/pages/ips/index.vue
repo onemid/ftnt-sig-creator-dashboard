@@ -39,7 +39,7 @@ const options = [
   { id: 1, name: 'ICMP', value: 'ICMP' },
   { id: 2, name: 'IGMP', value: 2 },
   { id: 3, name: 'GGP', value: 3 },
-  // { id: 4, name: 'IPv4', value: 4 },
+  { id: 4, name: 'IPv4', value: 4 },
   { id: 5, name: 'ST', value: 5 },
   { id: 6, name: 'TCP', value: 'TCP' },
   { id: 7, name: 'CBT', value: 7 },
