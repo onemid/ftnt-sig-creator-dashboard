@@ -18,6 +18,14 @@ const links = [{
     text: 'Signature Utils'
   }
 }, {
+  id: 'config',
+  label: 'Config Parser',
+  icon: 'i-heroicons-cog',
+  to: '/config',
+  tooltip: {
+    text: 'Config Parser'
+  }
+}, {
   id: 'logs',
   label: 'Logs Preview',
   icon: 'i-heroicons-document-text',

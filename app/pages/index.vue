@@ -9,6 +9,12 @@ const modules = [{
   description: 'Parsing the signature in structural way.',
   to: '/signature',
   icon: 'i-heroicons-code-bracket-square'
+},
+{
+  title: 'Config Parser',
+  description: 'Convert the config into the friendly view.',
+  to: '/logs',
+  icon: 'i-heroicons-cog'
 }, {
   title: 'Logs Preview',
   description: 'Convert the raw logs into the tabular view.',
