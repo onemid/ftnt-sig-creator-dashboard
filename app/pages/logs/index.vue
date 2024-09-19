@@ -359,7 +359,7 @@ const clearFilter = () => {
         class: '-m-1.5 text-xs font-bold text-left'
       }"
       :ui="{
-        thead: 'sticky top-0 bg-white',
+        thead: 'sticky top-0 bg-white dark:bg-gray-900',
         tr: {
           base: 'hover:bg-gray-200 dark:hover:bg-gray-800/50'
         },
