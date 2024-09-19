@@ -88,7 +88,7 @@ const parsingConfig = () => {
       v-slot="{ flattenItems }"
       class="list-none select-none w-full bg-white text-blackA11 rounded-lg p-2 text-sm font-medium mt-5"
       :items="configObj"
-      :get-key="(item) => item.type + item.name"
+      :get-key="(item) => item.type + item.name + item.value"
       :default-expanded="['components']"
     >
       <h2 class="font-semibold !text-base text-blackA11 px-2 pt-1">
@@ -116,11 +116,14 @@ const parsingConfig = () => {
         </template>
         <Icon
           v-else
-          :icon="item.value.icon || 'lucide:file'"
+          :icon="item.value.type === 'set' ? 'lucide:cog'
+            : item.value.type === 'edit' ? 'lucide:pencil'
+              : item.value.type === 'config' ? 'lucide:circle-slash-2'
+                : 'lucide:circle-slash-2'"
           class="h-4 w-4"
         />
         <div class="pl-2">
-          {{ item.value.type }} {{ item.value.name }} {{ item.value.settings }}
+          {{ item.value.type }} {{ item.value.name }} {{ item.value.value }}
         </div>
       </TreeItem>
     </TreeRoot>

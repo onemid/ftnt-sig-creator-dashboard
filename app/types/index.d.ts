@@ -91,6 +91,7 @@ type LogFields = {
 export type ConfigNode = {
   type: string
   name: string
+  value: string
   settings?: { [key: string]: string }
   children?: ConfigNode[]
 }
