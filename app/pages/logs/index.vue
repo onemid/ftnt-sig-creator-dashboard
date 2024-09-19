@@ -15,7 +15,6 @@ const logsParsedColumns = ref([])
 const selectedCols = ref([])
 const remainedSelectedCols = ref([])
 const isLogsModalOpen = ref(false)
-const isLogsFieldsModalOpen = ref(false)
 const isLoading = ref(false)
 
 const q = ref('')
@@ -27,7 +26,6 @@ const filteredRowsCnt = ref(logsBodyObj.value.length)
 const page = ref(1)
 const pageCount = 22
 
-const selectedRow = ref([])
 const filterOptions = ['Fulltext', 'Properties']
 const selectedFilterOptions = ref('Fulltext')
 
@@ -97,6 +95,7 @@ watch(selectedCols, () => {
 // })
 
 const filteredRows = computed(() => {
+  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   filteredRowsCnt.value = logsBodyObj.value.length
   if (!q.value) {
     return logsBodyObj.value
@@ -143,7 +142,9 @@ const filteredRows = computed(() => {
     })
     results = tmpResults
   }
+  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   page.value = 1
+  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   filteredRowsCnt.value = results.length
   return results
 })
@@ -166,7 +167,8 @@ const pageRows = computed(() => {
 })
 
 const defaultFilter = () => {
-  const defaultFilterList = ['date', 'time', 'proto', 'action', 'utmaction', 'policyid', 'policyname', 'policytype', 'srcip', 'dstip', 'srcport', 'dstport', 'service', 'app', 'sessionid', 'vd', 'attack']
+  const defaultFilterList = ['date', 'time', 'proto', 'action', 'utmaction', 'policyid', 'policyname', 'policytype',
+    'srcip', 'dstip', 'srcport', 'dstport', 'service', 'app', 'sessionid', 'vd', 'attack']
   const tmp = []
   defaultFilterList.forEach((elem) => {
     if (fields[elem]) {
@@ -192,197 +194,76 @@ const clearFilter = () => {
   remainedSelectedCols.value = logsBodyObj.value
   isDefaultFilterApplied.value = false
 }
-
-const items = row => [
-  [{
-    label: 'Edit',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', row.id)
-  }, {
-    label: 'Duplicate',
-    icon: 'i-heroicons-document-duplicate-20-solid'
-  }], [{
-    label: 'Archive',
-    icon: 'i-heroicons-archive-box-20-solid'
-  }, {
-    label: 'Move',
-    icon: 'i-heroicons-arrow-right-circle-20-solid'
-  }], [{
-    label: 'Delete',
-    icon: 'i-heroicons-trash-20-solid'
-  }]
-]
-
-const selectRow = (row) => {
-  const index = selectedRow.value.findIndex(item => item.id === row.id)
-  if (index === -1) {
-    selectedRow.value.push(row)
-  } else {
-    selectedRow.value.splice(index, 1)
-  }
-}
 </script>
 
 <template>
-  <UDashboardPanelContent class="pb-10">
-    <UDashboardSection
-      title="Logs Preview"
-      description="Convert the raw logs into the tabular view."
-    >
-      <template #links>
-        <div>
-          <UButton
-            label="Paste Logs"
-            @click="isLogsModalOpen = true"
-          />
-          <UModal
-            v-model="isLogsModalOpen"
-            fullscreen
-          >
-            <UCard
-              :ui="{
-                base: 'h-full flex flex-col',
-                rounded: '',
-                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-                body: {
-                  base: 'grow'
-                }
-              }"
-            >
-              <template #header>
-                <div class="flex items-center justify-between">
-                  <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-                    Paste Logs
-                  </h3>
-                  <UButton
-                    color="gray"
-                    variant="ghost"
-                    icon="i-heroicons-x-mark-20-solid"
-                    class="-my-1"
-                    @click="() => {
-                      isLogsModalOpen = false
-                      logs = logsStore.getLogs()
-                    }"
-                  />
-                </div>
-              </template>
-              <MonacoEditor
-                v-model="logs"
-                :disabled="isLoading"
-                lang="shell"
-                class="w-full h-[80%] border rounded p-1"
-                :options="{ theme: 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
-              />
-              <UButton
-                color="red"
-                class="mt-5 mx-1 float-end"
-                @click="logs = ''"
-              >
-                Clear
-              </UButton>
-              <UButton
-                color="green"
-                class="mt-5 mx-1 float-end"
-                :loading="isLoading"
-                @click="parsingLogs"
-              >
-                Parse Logs
-              </UButton>
-            </UCard>
-          </UModal>
-        </div>
-        <div>
-          <UButton
-            label="Fields Explain"
-            variant="outline"
-            @click="isLogsFieldsModalOpen = true"
-          />
-
-          <UModal
-            v-model="isLogsFieldsModalOpen"
-            fullscreen
-          >
-            <UCard
-              :ui="{
-                base: 'h-fit flex flex-col',
-                rounded: '',
-                divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-                body: {
-                  base: 'grow'
-                }
-              }"
-            >
-              <template #header>
-                <div class="flex items-center justify-between">
-                  <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-                    Fields Explain
-                  </h3>
-                  <UButton
-                    color="gray"
-                    variant="ghost"
-                    icon="i-heroicons-x-mark-20-solid"
-                    class="-my-1"
-                    @click="() => {
-                      isLogsFieldsModalOpen = false
-                    }"
-                  />
-                </div>
-              </template>
-              <UContainer class="overflow-y-auto h-full">
-                <UAccordion
-                  color="blue"
-                  variant="solid"
-                  size="md"
-                  :items="
-                    Object.keys(fields).sort().map((key, index) => {
-                      const field = fields[key];
-                      return {
-                        label: `${index + 1}. ${field.realName} (${key})`,
-                        content: `${field.realName} - ${field.description}`
-                      };
-                    })"
-                />
-              </UContainer>
-            </UCard>
-          </UModal>
-        </div>
-      </template>
-    </UDashboardSection>
-
+  <UDashboardPanelContent class="pb-5">
     <UCard
       :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }"
       class="min-w-0"
     >
       <template #header>
-        <div class="grid grid-cols-2 gap-5">
-          <div class="flex gap-1">
-            <USelectMenu
-              v-model="selectedFilterOptions"
-              :options="filterOptions"
+        <div class="flex flex-col md:flex-rol gap-3">
+          <div class="flex gap-1.5">
+            <UButton
+              label="Paste Logs"
+              @click="isLogsModalOpen = true"
             />
-            <UInput
-              v-if="selectedFilterOptions === 'Fulltext'"
-              v-model="q"
-              placeholder="Filter logs anywhere..."
-              class="w-full"
+            <UModal
+              v-model="isLogsModalOpen"
+              fullscreen
             >
-              <template #trailing>
-                <span class="text-gray-500 dark:text-gray-400 text-xs">{{ filteredRowsCnt }} results</span>
-              </template>
-            </UInput>
-            <UInput
-              v-if="selectedFilterOptions === 'Properties'"
-              v-model="q"
-              placeholder="Syntax: Property1=Val_1,Property2=Val_2,..."
-              class="w-full"
-            >
-              <template #trailing>
-                <span class="text-gray-500 dark:text-gray-400 text-xs">{{ filteredRowsCnt }} results</span>
-              </template>
-            </UInput>
-          </div>
-
-          <div class="flex gap-2">
+              <UCard
+                :ui="{
+                  base: 'h-full flex flex-col',
+                  rounded: '',
+                  divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+                  body: {
+                    base: 'grow'
+                  }
+                }"
+              >
+                <template #header>
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
+                      Paste Logs
+                    </h3>
+                    <UButton
+                      color="gray"
+                      variant="ghost"
+                      icon="i-heroicons-x-mark-20-solid"
+                      class="-my-1"
+                      @click="() => {
+                        isLogsModalOpen = false
+                        logs = logsStore.getLogs()
+                      }"
+                    />
+                  </div>
+                </template>
+                <MonacoEditor
+                  v-model="logs"
+                  :disabled="isLoading"
+                  lang="shell"
+                  class="w-full h-[80%] border rounded p-1"
+                  :options="{ theme: 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
+                />
+                <UButton
+                  color="red"
+                  class="mt-5 mx-1 float-end"
+                  @click="logs = ''"
+                >
+                  Clear
+                </UButton>
+                <UButton
+                  color="green"
+                  class="mt-5 mx-1 float-end"
+                  :loading="isLoading"
+                  @click="parsingLogs"
+                >
+                  Parse Logs
+                </UButton>
+              </UCard>
+            </UModal>
             <span
               v-if="isDefaultFilterApplied"
               class="w-full"
@@ -429,6 +310,32 @@ const selectRow = (row) => {
               Reset Filter
             </UButton>
           </div>
+          <div class="flex gap-1 grow">
+            <USelectMenu
+              v-model="selectedFilterOptions"
+              :options="filterOptions"
+            />
+            <UInput
+              v-if="selectedFilterOptions === 'Fulltext'"
+              v-model="q"
+              placeholder="Filter logs anywhere..."
+              class="w-full"
+            >
+              <template #trailing>
+                <span class="text-gray-500 dark:text-gray-400 text-xs">{{ filteredRowsCnt }} results</span>
+              </template>
+            </UInput>
+            <UInput
+              v-if="selectedFilterOptions === 'Properties'"
+              v-model="q"
+              placeholder="Syntax: Property1=Val_1,Property2=Val_2,..."
+              class="w-full"
+            >
+              <template #trailing>
+                <span class="text-gray-500 dark:text-gray-400 text-xs">{{ filteredRowsCnt }} results</span>
+              </template>
+            </UInput>
+          </div>
         </div>
       </template>
     </UCard>
@@ -452,6 +359,9 @@ const selectRow = (row) => {
       }"
       :ui="{
         thead: 'sticky top-0 bg-white',
+        tr: {
+          base: 'hover:bg-gray-200 dark:hover:bg-gray-800/50'
+        },
         th: {
           base: 'text-left rtl:text-right',
           padding: 'py-2 px-2',
@@ -592,7 +502,6 @@ const selectRow = (row) => {
       </template>
       <template
         #utmaction-data="{ row }"
-        class="text-center"
       >
         <span v-if="row.utmaction">
           <UBadge

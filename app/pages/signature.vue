@@ -24,7 +24,7 @@ const links = [[{
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <!--      <UDashboardNavbar title="Signature" /> -->
+      <UDashboardNavbar title="Signature Editor" />
 
       <!--      <UDashboardToolbar class="py-0 px-1.5 overflow-x-auto"> -->
       <!--        <UHorizontalNavigation :links="links" /> -->

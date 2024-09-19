@@ -19,13 +19,13 @@ const editTargetOrder: Ref<number | undefined> = ref(undefined)
 const selectedEditMode = ref('Property')
 
 const sigParsedColumns = [{
-  key: 'actions'
-}, {
   key: 'propName',
   label: 'Property'
 }, {
   key: 'propVal',
   label: 'Value'
+}, {
+  key: 'actions'
 }]
 
 const changeSignature = (sigText: string) => {
@@ -142,13 +142,6 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
 
 <template>
   <UDashboardPanelContent>
-    <UDashboardSection
-      title="Signature Editor"
-      description="Parsing the signature in structural way."
-    >
-      <template #links />
-    </UDashboardSection>
-
     <UCard
       :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }"
       class="min-w-0"
@@ -200,6 +193,9 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
       :rows="filteredRows"
       class="w-full mt-1"
       :ui="{
+        tr: {
+          base: 'hover:bg-gray-200 dark:hover:bg-gray-800/50'
+        },
         th: {
           base: 'text-left rtl:text-right',
           padding: 'py-1 px-0.5',
@@ -217,7 +213,7 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
       :columns="sigParsedColumns"
     >
       <template #actions-data="{ row }">
-        <div class="w-14">
+        <div class="flex w-16">
           <UButton
             color="gray"
             variant="ghost"
