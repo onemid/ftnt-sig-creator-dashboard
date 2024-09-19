@@ -658,8 +658,8 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
               <MonacoEditor
                 v-model="editSigPatBodyVal[idx].propVal"
                 lang="shell"
-                class="font-mono w-full h-20 border rounded p-1"
-                :options="{ theme: 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
+                class="font-mono w-full h-20 border dark:border-gray-700 rounded p-1"
+                :options="{ theme: colorMode.value === 'dark' ? 'vs-dark' : 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
               />
             </UFormGroup>
             <UFormGroup
@@ -696,6 +696,7 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
               color="green"
               :ui="{ rounded: 'rounded-full' }"
               variant="solid"
+              label="Add Modifier"
               @click="editSigPatBodyVal.push({
                 propOrder: editSigPatBodyVal.length + 1,
                 propName: '--distance',
@@ -703,6 +704,7 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
               })"
             />
             <UButton
+              v-if="editSigPatBodyVal.length >1"
               icon="i-heroicons-minus"
               size="sm"
               color="red"
