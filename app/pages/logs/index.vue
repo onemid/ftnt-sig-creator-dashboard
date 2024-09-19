@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FgtLog, FgtLogBody } from '~/types'
 import { useLogsStore } from '~~/stores/logs'
-import fields from '~/data/pattern_fields'
+import fields from '~/data/fields'
 
 const logsStore = useLogsStore()
 const logs = ref(logsStore.getLogs())
