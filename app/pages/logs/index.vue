@@ -4,6 +4,7 @@ import type { FgtLog, FgtLogBody } from '~/types'
 import { useLogsStore } from '~~/stores/logs'
 import fields from '~/data/fields'
 
+const colorMode = useColorMode()
 const logsStore = useLogsStore()
 const logs = ref(logsStore.getLogs())
 const logsBodyObj: Ref<FgtLogBody[] | null> = ref([])
@@ -245,7 +246,7 @@ const clearFilter = () => {
                   :disabled="isLoading"
                   lang="shell"
                   class="w-full h-[80%] border rounded p-1"
-                  :options="{ theme: 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
+                  :options="{ theme: colorMode.value === 'dark' ? 'vs-dark' : 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
                 />
                 <UButton
                   color="red"

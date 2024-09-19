@@ -4,6 +4,7 @@ import { useSigsStore } from '~~/stores/signatures'
 import sigMaker from '~/utils/sig_maker'
 import patternFields from '~/data/pattern_fields'
 
+const colorMode = useColorMode()
 const sigsStore = useSigsStore()
 const signature = ref(sigsStore.getSignature())
 const signaturePrettier = ref('')
@@ -150,8 +151,8 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
         <MonacoEditor
           v-model="signature"
           lang="shell"
-          class="font-mono w-full h-20 border rounded p-1"
-          :options="{ theme: 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
+          class="font-mono w-full h-20 border dark:border-gray-700 rounded p-1"
+          :options="{ theme: colorMode.value === 'dark' ? 'vs-dark' : 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
         />
         <!--        <MonacoEditor -->
         <!--          v-model="signaturePrettier" -->
@@ -287,7 +288,7 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
         >
           <ul
             role="list"
-            class="divide-y divide-gray-200"
+            class="divide-y divide-gray-200 dark:divide-white"
           >
             <li
               v-for="prop in row.propVal"
@@ -331,7 +332,7 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
                 </span>
                 <span
                   v-else
-                  class="font-medium text-indigo-600 font-mono"
+                  class="font-medium text-indigo-600 dark:text-white font-mono"
                 >
                   {{ prop.propVal }}
                 </span>

@@ -4,6 +4,7 @@ import { Icon } from '@iconify/vue'
 import configParser from '~/utils/config_parser'
 import type { ConfigNode } from '~/types'
 
+const colorMode = useColorMode()
 const isConfigModalOpen = ref(false)
 const config = ref('')
 const configObj: Ref<ConfigNode[]> = ref([])
@@ -63,7 +64,7 @@ const parsingConfig = () => {
                   v-model="config"
                   lang="shell"
                   class="w-full h-[80%] border rounded p-1"
-                  :options="{ theme: 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
+                  :options="{ theme: colorMode.value === 'dark' ? 'vs-dark' : 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
                 />
                 <UButton
                   color="red"
@@ -140,7 +141,9 @@ const parsingConfig = () => {
               class="h-4 w-4"
             />
             <div class="pl-2">
-              {{ item.value.type }} <span class="font-bold text-green-700">{{ item.value.name }}</span> <span class="font-bold text-cyan-700 font-mono">{{ item.value.value }}</span>
+              {{ item.value.type }}
+              <span class="font-bold text-green-700 dark:text-green-400 ml-1">{{ item.value.name }}</span>
+              <span class="font-bold text-cyan-700 dark:text-cyan-400 font-mono ml-1">{{ item.value.value }}</span>
             </div>
           </TreeItem>
         </TreeRoot>
