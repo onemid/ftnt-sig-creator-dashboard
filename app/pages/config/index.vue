@@ -16,15 +16,17 @@ const parsingConfig = () => {
 
 <template>
   <UDashboardPanelContent class="pb-5">
-    <UCard
-      :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }"
-      class="min-w-0"
+    <UDashboardSection
+      title="Parse Config"
+      description="Convert the FortiOS config into tree view."
+      orientation="horizontal"
+      :ui="{ container: 'lg:sticky top-2' }"
     >
-      <template #header>
+      <template #links>
         <div class="flex flex-col md:flex-rol gap-3">
           <div class="flex gap-1.5">
             <UButton
-              label="Paste Logs"
+              label="Paste Config"
               @click="isConfigModalOpen = true"
             />
             <UModal
@@ -82,50 +84,67 @@ const parsingConfig = () => {
           </div>
         </div>
       </template>
-    </UCard>
-    <TreeRoot
-      v-if="configObj"
-      v-slot="{ flattenItems }"
-      class="list-none select-none w-full bg-white text-blackA11 rounded-lg p-2 text-sm font-medium mt-5"
-      :items="configObj"
-      :get-key="(item) => item.type + item.name + item.value"
-      :default-expanded="['components']"
-    >
-      <h2 class="font-semibold !text-base text-blackA11 px-2 pt-1">
-        FortiGate Configuration Structure
-      </h2>
-      <TreeItem
-        v-for="item in flattenItems"
-        v-slot="{ isExpanded }"
-        :key="item._id"
-        :style="{ 'padding-left': `${item.level - 0.5}rem` }"
-        v-bind="item.bind"
-        class="flex items-center py-1 px-2 my-0.5 rounded outline-none focus:ring-grass8 focus:ring-2 data-[selected]:bg-grass4"
+
+      <UCard
+        :ui="{ header: { padding: 'p-4 sm:px-6' }, body: { padding: '' } }"
+        class="min-w-0"
       >
-        <template v-if="item.hasChildren">
-          <Icon
-            v-if="!isExpanded"
-            icon="lucide:folder"
-            class="h-4 w-4"
-          />
-          <Icon
-            v-else
-            icon="lucide:folder-open"
-            class="h-4 w-4"
+        <template #header>
+          <UInput
+            v-model="q"
+            icon="i-heroicons-magnifying-glass"
+            placeholder="Search members"
+            autofocus
           />
         </template>
-        <Icon
-          v-else
-          :icon="item.value.type === 'set' ? 'lucide:cog'
-            : item.value.type === 'edit' ? 'lucide:pencil'
-              : item.value.type === 'config' ? 'lucide:circle-slash-2'
-                : 'lucide:circle-slash-2'"
-          class="h-4 w-4"
-        />
-        <div class="pl-2">
-          {{ item.value.type }} {{ item.value.name }} {{ item.value.value }}
-        </div>
-      </TreeItem>
-    </TreeRoot>
+
+        <TreeRoot
+          v-if="configObj"
+          v-slot="{ flattenItems }"
+          multiple
+          propagate-select
+          class="list-none select-none w-full text-blackA11 rounded-lg text-sm font-medium pt-3 p-5"
+          :items="configObj"
+          :get-key="(item) => item.type + item.name + item.value"
+          :default-expanded="['components']"
+        >
+          <h2 class="font-semibold !text-base text-blackA11 px-2 pt-1 pb-2">
+            FortiOS Configuration Structure
+          </h2>
+          <TreeItem
+            v-for="item in flattenItems"
+            v-slot="{ isExpanded }"
+            :key="item._id"
+            :style="{ 'padding-left': `${item.level - 0.5}rem` }"
+            v-bind="item.bind"
+            class="flex items-center py-1 px-2 my-0.5 rounded outline-none focus:ring-grass8 focus:ring-2 data-[selected]:bg-grass4"
+          >
+            <template v-if="item.hasChildren">
+              <Icon
+                v-if="!isExpanded"
+                icon="lucide:folder"
+                class="h-4 w-4"
+              />
+              <Icon
+                v-else
+                icon="lucide:folder-open"
+                class="h-4 w-4"
+              />
+            </template>
+            <Icon
+              v-else
+              :icon="item.value.type === 'set' ? 'lucide:cog'
+                : item.value.type === 'edit' ? 'lucide:pencil'
+                  : item.value.type === 'config' ? 'lucide:circle-slash-2'
+                    : 'lucide:circle-slash-2'"
+              class="h-4 w-4"
+            />
+            <div class="pl-2">
+              {{ item.value.type }} <span class="font-bold text-green-700">{{ item.value.name }}</span> <span class="font-bold text-cyan-700 font-mono">{{ item.value.value }}</span>
+            </div>
+          </TreeItem>
+        </TreeRoot>
+      </UCard>
+    </UDashboardSection>
   </UDashboardPanelContent>
 </template>
