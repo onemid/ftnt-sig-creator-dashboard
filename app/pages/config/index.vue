@@ -35,7 +35,7 @@ const filterConfig = computed(() => {
     // Check if the current node matches the query
     const matches
         = getSafeLowerCase(node.type).startsWith(lowerCaseQuery)
-        || getSafeLowerCase(node.name).startsWith(lowerCaseQuery)
+        || getSafeLowerCase(node.name).includes(lowerCaseQuery)
         || getSafeLowerCase(node.value).includes(lowerCaseQuery)
 
     // If the node has children, recursively filter them
