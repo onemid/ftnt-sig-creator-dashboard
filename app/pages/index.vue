@@ -1,10 +1,5 @@
 <script setup lang="ts">
 const modules = [{
-  title: 'Home',
-  description: 'Collection of essential tools of Fortinet IPS.',
-  to: '/',
-  icon: 'i-heroicons-home'
-}, {
   title: 'Signature Editor',
   description: 'Parsing the signature in structural way.',
   to: '/signature',
@@ -33,7 +28,12 @@ const modules = [{
       </UDashboardNavbar>
 
       <UDashboardPanelContent>
-        <UPageGrid>
+        <ULandingCTA
+          title="Fortinet IPS and App Control Utilities"
+          description="Please click the utilities listed below to continue."
+          card
+        />
+        <UPageGrid class="my-5">
           <UPageCard
             v-for="(module, index) in modules"
             :key="index"
