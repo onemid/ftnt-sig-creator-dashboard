@@ -1,9 +1,10 @@
 // Function to parse the configuration file into a structured format
-import type { ConfigNode } from '~/types'
+import type { ConfigNode, RulesMap } from '~/types'
 
-function configParser(fileContent: string): ConfigNode[] {
+function configParser(fileContent: string): [ConfigNode[], RulesMap] {
   // Read the file content
   const lines = fileContent.split('\n')
+  const rulesMap: RulesMap = {}
 
   // Define the result structure
   const config: ConfigNode[] = []
@@ -61,6 +62,39 @@ function configParser(fileContent: string): ConfigNode[] {
       const value = words.slice(2).join(' ')
       const newNode = createNode('set', name, value)
       delete newNode.children
+      let curFlag = ''
+      if (value && name === 'signature') {
+        let attackId = -1
+        let sigName = ''
+        const regex = /(--name) *\\*"([^"\\]*)\\*" *;|(--attack_id) ([0-9]+) *;/gm
+        let m
+        while ((m = regex.exec(value)) !== null) {
+          // This is necessary to avoid infinite loops with zero-width matches
+          if (m.index === regex.lastIndex) {
+            regex.lastIndex++
+          }
+
+          // The result can be accessed through the `m`-variable.
+          m.forEach((match) => {
+            if (match) {
+              if (match === '--attack_id') {
+                curFlag = 'attack_id'
+              } else if (match === '--name') {
+                curFlag = 'name'
+              } else {
+                if (curFlag === 'attack_id' && match) {
+                  attackId = parseInt(match)
+                  curFlag = ''
+                } else if (curFlag === 'name') {
+                  sigName = match
+                  curFlag = ''
+                }
+              }
+            }
+          })
+        }
+        rulesMap[attackId] = [sigName, value]
+      }
       stack[stack.length - 1].children!.push(newNode)
     } else if (command === 'next') {
       // End the current edit block
@@ -95,7 +129,7 @@ function configParser(fileContent: string): ConfigNode[] {
     }
     return result
   })
-  return config
+  return [config, rulesMap]
 }
 
 export default configParser

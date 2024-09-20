@@ -97,9 +97,14 @@ export type ConfigNode = {
   children?: ConfigNode[]
 }
 
+type RulesMap = {
+  [key: number]: [string, string] // attack_id: sig name, sig body
+}
+
 export interface ConfigStore {
   config: string
   parsedConfig: ConfigNode[]
+  rulesMap: RulesMap
 }
 
 // Below is the gui option

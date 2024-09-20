@@ -9,15 +9,30 @@ const colorMode = useColorMode()
 const isConfigModalOpen = ref(false)
 const configStore = useConfigStore()
 const config = ref(configStore.getConfig())
+const ruleMaps = ref(configStore.getRulesMap())
 const configObj: Ref<ConfigNode[]> = ref(configStore.getConfigObject())
 
 const parsingConfig = () => {
   configStore.setConfig(config.value)
   configObj.value = configStore.getConfigObject()
+  ruleMaps.value = configStore.getRulesMap()
   isConfigModalOpen.value = false
 }
 
+const seeRuleMaps = (input: string[], enableClick: boolean) => {
+  if (input.length === 1) {
+    const result = ruleMaps.value[parseInt(input[0])]
+    if (enableClick && result) {
+      copyToEditor(result[1])
+    }
+    return result[0] ?? 'Signature Does Not Found'
+  } else {
+    return 'Too many rules'
+  }
+}
+
 const copyToEditor = async (signature: string) => {
+  console.log(signature)
   const sigsStore = useSigsStore()
   const newString = JSON.parse(`[${signature}]`) // to get rid of escape
   sigsStore.setSignature(newString[0])
@@ -230,6 +245,16 @@ const filterConfig = computed(() => {
                 @click="copyToEditor(item.value.value)"
               >
                 See in editor
+              </UButton>
+              <UButton
+                v-else-if="item.value.type === 'set' && (item.value.name === 'rule' || item.value.name === 'application')"
+                size="2xs"
+                color="orange"
+                variant="outline"
+                class="ml-2"
+                @click="seeRuleMaps(item.value.value.trim().split(' '), true)"
+              >
+                {{ seeRuleMaps(item.value.value.trim().split(' '), false) }}
               </UButton>
               <span class="font-bold text-cyan-700 dark:text-cyan-400 font-mono ml-2">{{ item.value.value }}</span>
             </div>

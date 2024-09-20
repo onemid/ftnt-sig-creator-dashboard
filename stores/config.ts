@@ -7,7 +7,8 @@ export const useConfigStore = defineStore('config', {
   // a function that returns a fresh state
   state: (): ConfigStore => ({
     config: '',
-    parsedConfig: []
+    parsedConfig: [],
+    rulesMap: {}
   }),
   persist: {
     key: 'config',
@@ -28,9 +29,14 @@ export const useConfigStore = defineStore('config', {
     getConfig(): string {
       return this.config
     },
+    getRulesMap(): string {
+      return this.rulesMap
+    },
     setConfig(config: string) {
       this.config = config.trim()
-      this.parsedConfig = configParser(config)
+      const results = configParser(config)
+      this.parsedConfig = results[0]
+      this.rulesMap = results[1]
     }
   }
 })
