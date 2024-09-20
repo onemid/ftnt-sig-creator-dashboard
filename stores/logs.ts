@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { parse, stringify } from 'zipson'
 import type { FgtLog, LogsStore } from '~/types'
 import logParser from '~/utils/log_parser'
 
@@ -10,8 +11,12 @@ export const useLogsStore = defineStore('logs', {
     parsedLogs: []
   }),
   persist: {
-    key: 'logs',
-    storage: persistedState.localStorage
+    // key: 'logs',
+    // storage: persistedState.localStorage,
+    serializer: {
+      deserialize: parse,
+      serialize: stringify
+    }
   },
   getters: {
 

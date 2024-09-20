@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { parse, stringify } from 'zipson'
 import type { SigBody, SigStore } from '~/types'
 import sigParser from '~/utils/sig_parser'
 import sigGrouping from '~/utils/sig_grouping'
@@ -19,8 +20,12 @@ export const useSigsStore = defineStore('signatures', {
     }]
   }),
   persist: {
-    key: 'signatures',
-    storage: persistedState.localStorage
+    // key: 'signatures',
+    // storage: persistedState.localStorage,
+    serializer: {
+      deserialize: parse,
+      serialize: stringify
+    }
   },
   getters: {
 
