@@ -88,7 +88,13 @@ function configParser(fileContent: string): ConfigNode[] {
     }
   })
 
-  console.log(config)
+  config.sort((a, b) => {
+    let result = a.type.localeCompare(b.type)
+    if (!result) {
+      result = a.name.localeCompare(b.name)
+    }
+    return result
+  })
   return config
 }
 

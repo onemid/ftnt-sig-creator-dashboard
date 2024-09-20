@@ -52,7 +52,7 @@ const filterConfig = computed(() => {
     // - It matches the query, or
     // - Any of its children match the query
     if (matches || (filteredChildren && filteredChildren.length > 0)) {
-      if (node.type === 'config') {
+      if (node.type === 'set') {
         defaultExpanded.push(node.key)
       }
       return {
@@ -67,10 +67,8 @@ const filterConfig = computed(() => {
 
   // Apply the filter to each root node and exclude nulls
 
-  if (defaultExpanded.length < 50) {
-    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-    expanded.value = defaultExpanded
-  }
+  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+  expanded.value = defaultExpanded
   return configObj.value
     .map(filterNodes)
     .filter((node): node is ConfigNode => node !== null)
@@ -174,37 +172,40 @@ const filterConfig = computed(() => {
             FortiOS Configuration Structure
           </h2>
           <TreeItem
-            v-for="item in flattenItems"
+            v-for="item in flattenItems.filter((flattenItem) => flattenItem.hasChildren || flattenItem.value.type === 'set')"
             v-slot="{ isExpanded }"
             :key="item._id"
             :style="{ 'padding-left': `${item.level - 0.5}rem` }"
             v-bind="item.bind"
             class="flex items-center py-1 px-2 my-0.5 rounded outline-none focus:ring-grass8 focus:ring-2 data-[selected]:bg-grass4"
           >
-            <template v-if="item.hasChildren">
-              <Icon
-                v-if="!isExpanded"
-                icon="lucide:folder"
-                class="h-4 w-4"
-              />
+            <div>
+              <template v-if="item.hasChildren">
+                <Icon
+                  v-if="!isExpanded"
+                  icon="lucide:folder"
+                  class="h-4 w-4"
+                />
+                <Icon
+                  v-else
+                  icon="lucide:folder-open"
+                  class="h-4 w-4"
+                />
+              </template>
               <Icon
                 v-else
-                icon="lucide:folder-open"
+                :icon="item.value.type === 'set' ? 'lucide:cog'
+                  : item.value.type === 'edit' ? 'lucide:circle-slash-2'
+                    : item.value.type === 'config' ? 'lucide:circle-slash-2'
+                      : 'lucide:circle-slash-2'"
                 class="h-4 w-4"
               />
-            </template>
-            <Icon
-              v-else
-              :icon="item.value.type === 'set' ? 'lucide:cog'
-                : item.value.type === 'edit' ? 'lucide:circle-slash-2'
-                  : item.value.type === 'config' ? 'lucide:circle-slash-2'
-                    : 'lucide:circle-slash-2'"
-              class="h-4 w-4"
-            />
+            </div>
+
             <div class="pl-2">
-              {{ item.value.type }}
-              <span class="font-bold text-green-700 dark:text-green-400 ml-1">{{ item.value.name }}</span>
-              <span class="font-bold text-cyan-700 dark:text-cyan-400 font-mono ml-1">{{ item.value.value }}</span>
+              <span class="font-bold uppercase">{{ item.value.type }}</span>
+              <span class="font-bold text-green-700 dark:text-green-400 font-mono ml-2">{{ item.value.name }}</span>
+              <span class="font-bold text-cyan-700 dark:text-cyan-400 font-mono ml-2">{{ item.value.value }}</span>
             </div>
           </TreeItem>
         </TreeRoot>
