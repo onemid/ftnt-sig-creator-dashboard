@@ -77,6 +77,7 @@ const postProcess = () => {
 }
 
 loadLogs()
+parsingLogs()
 
 watch(selectedCols, () => {
   remainedSelectedCols.value = Array.from(logsParsedColumns.value)
