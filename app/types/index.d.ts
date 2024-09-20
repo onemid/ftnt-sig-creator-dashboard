@@ -97,6 +97,11 @@ export type ConfigNode = {
   children?: ConfigNode[]
 }
 
+export interface ConfigStore {
+  config: string
+  parsedConfig: ConfigNode[]
+}
+
 // Below is the gui option
 
 type LimitedOption = {

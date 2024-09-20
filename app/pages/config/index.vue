@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { TreeItem, TreeRoot } from 'radix-vue'
 import { Icon } from '@iconify/vue'
-import configParser from '~/utils/config_parser'
 import type { ConfigNode } from '~/types'
+import { useConfigStore } from '~~/stores/config'
 
 const colorMode = useColorMode()
 const isConfigModalOpen = ref(false)
-const config = ref('')
-const configObj: Ref<ConfigNode[]> = ref([])
+const configStore = useConfigStore()
+const config = ref(configStore.getConfig())
+const configObj: Ref<ConfigNode[]> = ref(configStore.getConfigObject())
 
 const parsingConfig = () => {
-  configObj.value = configParser(config.value)
+  configStore.setConfig(config.value)
+  configObj.value = configStore.getConfigObject()
   isConfigModalOpen.value = false
 }
 
