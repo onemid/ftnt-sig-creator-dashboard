@@ -19,11 +19,8 @@ const parsingConfig = () => {
 
 const copyToEditor = async (signature: string) => {
   const sigsStore = useSigsStore()
-  sigsStore.setSignature(signature.trim().slice(1, -1))
-  // await navigateTo({ path: '/signature', open: {
-  //   target: '_blank'
-  // }
-  // })
+  const newString = JSON.parse(`[${signature}]`) // to get rid of escape
+  sigsStore.setSignature(newString[0])
   await navigateTo('/signature', {
     open: {
       target: '_blank',
@@ -224,17 +221,17 @@ const filterConfig = computed(() => {
             <div class="pl-2">
               <span class="font-bold uppercase">{{ item.value.type }}</span>
               <span class="font-bold text-green-700 dark:text-green-400 font-mono ml-2">{{ item.value.name }}</span>
-              <span class="font-bold text-cyan-700 dark:text-cyan-400 font-mono ml-2">{{ item.value.value }}</span>
               <UButton
                 v-if="item.value.name === 'signature'"
                 size="2xs"
                 color="orange"
                 variant="outline"
-                class="ml-3"
+                class="ml-2"
                 @click="copyToEditor(item.value.value)"
               >
                 See in editor
               </UButton>
+              <span class="font-bold text-cyan-700 dark:text-cyan-400 font-mono ml-2">{{ item.value.value }}</span>
             </div>
           </TreeItem>
         </TreeRoot>
