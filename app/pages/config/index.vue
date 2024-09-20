@@ -3,6 +3,7 @@ import { TreeItem, TreeRoot } from 'radix-vue'
 import { Icon } from '@iconify/vue'
 import type { ConfigNode } from '~/types'
 import { useConfigStore } from '~~/stores/config'
+import { useSigsStore } from '~~/stores/signatures'
 
 const colorMode = useColorMode()
 const isConfigModalOpen = ref(false)
@@ -14,6 +15,24 @@ const parsingConfig = () => {
   configStore.setConfig(config.value)
   configObj.value = configStore.getConfigObject()
   isConfigModalOpen.value = false
+}
+
+const copyToEditor = async (signature: string) => {
+  const sigsStore = useSigsStore()
+  sigsStore.setSignature(signature.trim().slice(1, -1))
+  // await navigateTo({ path: '/signature', open: {
+  //   target: '_blank'
+  // }
+  // })
+  await navigateTo('/signature', {
+    open: {
+      target: '_blank',
+      windowFeatures: {
+        width: 1500,
+        height: 1000
+      }
+    }
+  })
 }
 
 const q = ref('')
@@ -206,6 +225,16 @@ const filterConfig = computed(() => {
               <span class="font-bold uppercase">{{ item.value.type }}</span>
               <span class="font-bold text-green-700 dark:text-green-400 font-mono ml-2">{{ item.value.name }}</span>
               <span class="font-bold text-cyan-700 dark:text-cyan-400 font-mono ml-2">{{ item.value.value }}</span>
+              <UButton
+                v-if="item.value.name === 'signature'"
+                size="2xs"
+                color="orange"
+                variant="outline"
+                class="ml-3"
+                @click="copyToEditor(item.value.value)"
+              >
+                See in editor
+              </UButton>
             </div>
           </TreeItem>
         </TreeRoot>
