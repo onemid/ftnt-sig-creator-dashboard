@@ -196,7 +196,7 @@ const filterConfig = computed(() => {
             <Icon
               v-else
               :icon="item.value.type === 'set' ? 'lucide:cog'
-                : item.value.type === 'edit' ? 'lucide:pencil'
+                : item.value.type === 'edit' ? 'lucide:circle-slash-2'
                   : item.value.type === 'config' ? 'lucide:circle-slash-2'
                     : 'lucide:circle-slash-2'"
               class="h-4 w-4"
