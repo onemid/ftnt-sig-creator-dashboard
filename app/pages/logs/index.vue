@@ -33,6 +33,9 @@ const selectedFilterOptions = ref('Fulltext')
 const loadLogs = () => {
   isLoading.value = true
   logsObj.value = logsStore.getLogsObject()
+  if (logs.value.length > 0 && logsObj.value.length === 0) {
+    parsingLogs()
+  }
   postProcess()
   isLoading.value = false
   isLogsModalOpen.value = false
@@ -77,7 +80,6 @@ const postProcess = () => {
 }
 
 loadLogs()
-parsingLogs()
 
 watch(selectedCols, () => {
   remainedSelectedCols.value = Array.from(logsParsedColumns.value)
