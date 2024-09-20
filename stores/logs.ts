@@ -9,7 +9,10 @@ export const useLogsStore = defineStore('logs', {
     columns: new Set(),
     parsedLogs: []
   }),
-  persist: true,
+  persist: {
+    key: 'logs',
+    storage: persistedState.localStorage
+  },
   getters: {
 
   },

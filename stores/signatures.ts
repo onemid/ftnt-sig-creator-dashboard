@@ -18,7 +18,10 @@ export const useSigsStore = defineStore('signatures', {
       propVal: 'Fortinet.FortiGate.Signature'
     }]
   }),
-  persist: true,
+  persist: {
+    key: 'signatures',
+    storage: persistedState.localStorage
+  },
   getters: {
 
   },
