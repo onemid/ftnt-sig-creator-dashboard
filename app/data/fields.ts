@@ -34,31 +34,27 @@ const fields: LogFields = {
     description: 'NAT source port.'
   },
   srcip: {
-    realName: 'Src IP',
+    realName: 'Src.IP',
     description: 'IP address of the traffic\u2019s origin.\r\nThe source varies by the direction:\n\n\nIn HTTP requests, this is the web\r\nbrowser or other client.\n\n\nIn HTTP responses, this is the\r\nphysical server.'
   },
   transip: {
-    realName: 'NAT IP',
+    realName: 'NAT.IP',
     description: 'NAT source IP.'
   },
   srcport: {
-    realName: 'Src Port ',
+    realName: 'Src.Port ',
     description: 'Port number of the traffic\'s origin.'
   },
   srccountry: {
-    realName: 'Src Country',
+    realName: 'Src.Country',
     description: 'Name of the source country.'
   },
-  Interfacesrcintf: {
-    realName: 'Src Interface(srcintf)',
-    description: 'Interface name of the traffic\'s origin.'
-  },
   srcname: {
-    realName: 'Src Name',
+    realName: 'Src.Name',
     description: 'Name of the source.'
   },
   srcintfrole: {
-    realName: 'Src Interface Name',
+    realName: 'Src.Interface Name',
     description: 'Name of the source interface.'
   },
   devtype: {
@@ -70,11 +66,11 @@ const fields: LogFields = {
     description: 'OS of the source.'
   },
   mastersrcmac: {
-    realName: 'Master Src MAC',
+    realName: 'Master Src.MAC',
     description: 'The master MAC address for a host that has multiple network\r\ninterfaces.'
   },
   srcmac: {
-    realName: 'Src MAC',
+    realName: 'Src.MAC',
     description: 'MAC address associated with the source IP address.'
   },
   srcserver: {
@@ -82,35 +78,39 @@ const fields: LogFields = {
     description: 'Server of the source.'
   },
   srcintf: {
-    realName: 'Src Interface',
+    realName: 'Src.Interface',
     description: 'Interface of the traffic\'s source.'
   },
   devid: {
-    realName: 'Device ID',
+    realName: 'Device ID (same as dvid)',
+    description: 'Serial number of the device for the traffic\'s origin.'
+  },
+  dvid: {
+    realName: 'Device ID (same as devid)',
     description: 'Serial number of the device for the traffic\'s origin.'
   },
   dstip: {
-    realName: 'Dst IP',
+    realName: 'Dst.IP',
     description: 'Destination IP address for the web.'
   },
   dstport: {
-    realName: 'Dst Port',
+    realName: 'Dst.Port',
     description: 'Port number of the traffic\'s destination.'
   },
   dstcountry: {
-    realName: 'Dst Country',
+    realName: 'Dst.Country',
     description: 'Name of the destination country.'
   },
   dstintf: {
-    realName: 'Dst Interface',
+    realName: 'Dst.Interface',
     description: 'Interface of the traffic\'s destination.'
   },
   dstname: {
-    realName: 'Dst Name',
+    realName: 'Dst.Name',
     description: 'Name of the destination.'
   },
   dstintfrole: {
-    realName: 'Dst Interface Name',
+    realName: 'Dst.Interface Name',
     description: 'Name of the destination interface.'
   },
   app: {
@@ -216,6 +216,114 @@ const fields: LogFields = {
   utmref: {
     realName: 'UTM Ref',
     description: 'UTM reference number.'
+  },
+  bandwidth: {
+    realName: 'Bandwidth',
+    description: 'Bandwidth, seen in: System performance statistics'
+  },
+  logdesc: {
+    realName: 'Log Description',
+    description: 'Log description of the log.'
+  },
+  user: {
+    realName: 'User',
+    description: 'User name of authenticated user'
+  },
+  msg: {
+    realName: 'Message',
+    description: 'Log message.'
+  },
+  name: {
+    realName: 'Connection Name',
+    description: 'Display Name of the Connection'
+  },
+  sn: {
+    realName: 'Serial Number',
+    description: ''
+  },
+  cpu: {
+    realName: 'CPU Usage',
+    description: ''
+  },
+  mem: {
+    realName: 'Memory Usage ',
+    description: ''
+  },
+  totalsession: {
+    realName: 'Total Number of Sessions',
+    description: ''
+  },
+  disk: {
+    realName: 'Disk Usage',
+    description: ''
+  },
+  setuprate: {
+    realName: 'Session Setup Rate',
+    description: ''
+  },
+  disklograte: {
+    realName: 'Disk Log Rate',
+    description: ''
+  },
+  fazlograte: {
+    realName: 'FortiAnalyzer Logging Rate',
+    description: ''
+  },
+  freediskstorage: {
+    realName: 'Free Space',
+    description: 'Free Disk Space'
+  },
+  sysuptime: {
+    realName: 'Sys.Uptime',
+    description: ''
+  },
+  waninfo: {
+    realName: 'WAN Info',
+    description: ''
+  },
+  dsteuid: {
+    realName: 'Dst.End User ID',
+    description: 'An identification number for the destination end user.'
+  },
+  dstepid: {
+    realName: 'Dst.Endpoint ID',
+    description: 'An identification number for the destination endpoint.'
+  },
+  devid: {
+    realName: 'Device ID',
+    description: 'An identification number for the device that recorded the event.'
+  },
+  devname: {
+    realName: 'Device Name',
+    description: 'The name of the device that recorded the event.'
+  },
+  dtime: {
+    realName: 'Device Time',
+    description: 'The year, month, and day when the event occurred in the format: YY-MM-DD. It also includes the hour, minute, and second of when the event occurred.'
+  },
+  euid: {
+    realName: 'End User ID',
+    description: 'An identification number for the end user.'
+  },
+  epid: {
+    realName: 'Endpoint ID',
+    description: 'An identification number for the endpoint user.'
+  },
+  eventtype: {
+    realName: 'Event Type',
+    description: 'The type of event recorded.'
+  },
+  id: {
+    realName: 'Event ID',
+    description: 'An identification number for the event.'
+  },
+  logver: {
+    realName: 'Log Version',
+    description: 'FOS log version'
+  },
+  itime: {
+    realName: 'Timestamp',
+    description: 'FortiAnalyzer Timestamp'
   }
 }
 

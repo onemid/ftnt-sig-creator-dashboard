@@ -11,8 +11,8 @@ export const useLogsStore = defineStore('logs', {
     parsedLogs: []
   }),
   persist: {
-    // key: 'logs',
-    // storage: persistedState.localStorage,
+    key: 'logs',
+    storage: persistedState.localStorage,
     serializer: {
       deserialize: parse,
       serialize: stringify

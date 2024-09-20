@@ -20,8 +20,8 @@ export const useSigsStore = defineStore('signatures', {
     }]
   }),
   persist: {
-    // key: 'signatures',
-    // storage: persistedState.localStorage,
+    key: 'signatures',
+    storage: persistedState.localStorage,
     serializer: {
       deserialize: parse,
       serialize: stringify
