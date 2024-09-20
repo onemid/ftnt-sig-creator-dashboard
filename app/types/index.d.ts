@@ -89,6 +89,7 @@ type LogFields = {
 // Below is the fgt config
 
 export type ConfigNode = {
+  key: number
   type: string
   name: string
   value: string

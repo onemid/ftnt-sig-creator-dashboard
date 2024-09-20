@@ -13,6 +13,66 @@ const parsingConfig = () => {
   configObj.value = configParser(config.value)
   isConfigModalOpen.value = false
 }
+
+const q = ref('')
+const expanded = ref([])
+
+const filterConfig = computed(() => {
+  // If the query is empty, return the original nodes
+  if (!q.value.trim()) {
+    return configObj.value
+  }
+
+  const lowerCaseQuery = q.value.toLowerCase()
+  const defaultExpanded = []
+
+  const getSafeLowerCase = (prop?: string): string => {
+    return prop ? prop.toLowerCase() : ''
+  }
+
+  // Recursive function to filter nodes
+  const filterNodes = (node: ConfigNode): ConfigNode | null => {
+    // Check if the current node matches the query
+    const matches
+        = getSafeLowerCase(node.type).startsWith(lowerCaseQuery)
+        || getSafeLowerCase(node.name).startsWith(lowerCaseQuery)
+        || getSafeLowerCase(node.value).includes(lowerCaseQuery)
+
+    // If the node has children, recursively filter them
+    let filteredChildren: ConfigNode[] | undefined
+    if (node.children) {
+      filteredChildren = node.children
+        .map(filterNodes)
+        .filter((child): child is ConfigNode => child !== null)
+    }
+
+    // Determine if the node should be included:
+    // - It matches the query, or
+    // - Any of its children match the query
+    if (matches || (filteredChildren && filteredChildren.length > 0)) {
+      if (node.type === 'config') {
+        defaultExpanded.push(node.key)
+      }
+      return {
+        ...node,
+        children: filteredChildren
+      }
+    }
+
+    // Exclude the node if it doesn't match and has no matching children
+    return null
+  }
+
+  // Apply the filter to each root node and exclude nulls
+
+  if (defaultExpanded.length < 50) {
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    expanded.value = defaultExpanded
+  }
+  return configObj.value
+    .map(filterNodes)
+    .filter((node): node is ConfigNode => node !== null)
+})
 </script>
 
 <template>
@@ -94,7 +154,7 @@ const parsingConfig = () => {
           <UInput
             v-model="q"
             icon="i-heroicons-magnifying-glass"
-            placeholder="Search members"
+            placeholder="Search properties..."
             autofocus
           />
         </template>
@@ -102,11 +162,10 @@ const parsingConfig = () => {
         <TreeRoot
           v-if="configObj"
           v-slot="{ flattenItems }"
-          multiple
-          propagate-select
+          v-model:expanded="expanded"
           class="list-none select-none w-full text-blackA11 rounded-lg text-sm font-medium pt-3 p-5"
-          :items="configObj"
-          :get-key="(item) => item.type + item.name + item.value"
+          :items="filterConfig"
+          :get-key="(item) => item.key"
           :default-expanded="['components']"
         >
           <h2 class="font-semibold !text-base text-blackA11 px-2 pt-1 pb-2">

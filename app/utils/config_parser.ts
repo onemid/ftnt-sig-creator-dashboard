@@ -8,9 +8,11 @@ function configParser(fileContent: string): ConfigNode[] {
   // Define the result structure
   const config: ConfigNode[] = []
   const stack: ConfigNode[] = []
+  let key = 0
 
   // Helper function to create a new node
   const createNode = (type: string, name: string, value: string): ConfigNode => ({
+    key: key++,
     type,
     name,
     value,
