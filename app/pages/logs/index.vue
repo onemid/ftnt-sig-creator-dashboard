@@ -346,10 +346,10 @@ const clearFilter = () => {
       </template>
     </UCard>
     <UTable
-      v-if="logsParsedColumns.length > 0 "
+      v-if="logsBodyObj.length > 0"
       v-model:sort="sort"
       :loading="isLoading"
-      :rows="logsParsedColumns.length > 0 ? pageRows : []"
+      :rows="logsBodyObj.length > 0 ? pageRows : []"
       class="w-full mt-1 font-mono"
       :columns="[...selectedCols, ...remainedSelectedCols]"
       sort-mode="manual"
