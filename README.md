@@ -1,18 +1,24 @@
-![nuxt-ui-dashboard-social-card](https://github.com/nuxt-ui-pro/dashboard/assets/739984/f785284b-7db2-4732-af0e-2cb3c0bd7ca2)
+# Fortinet IPS/App Control Utilities
 
-# Nuxt UI Pro - Dashboard template
+## Features
 
-[![Nuxt UI Pro](https://img.shields.io/badge/Made%20with-Nuxt%20UI%20Pro-00DC82?logo=nuxt.js&labelColor=020420)](https://ui.nuxt.com/pro)
+1. Signature Editor: Allow users to preview and edit the signature in a more friendly way.
+2. Config Parser: Parsing the Fortinet products configuration in a friendly user interface.
+3. Logs Preview: Parsing Fortinet logs to tablular view and support the full-text search.
 
-- [Live demo](https://dashboard-template.nuxt.dev/)
-- [Play on Stackblitz](https://stackblitz.com/github/nuxt-ui-pro/dashboard)
-- [Documentation](https://ui.nuxt.com/pro/getting-started)
-
-## Quick Start
-
-```bash [Terminal]
-npx nuxi init -t github:nuxt-ui-pro/dashboard
-```
+## Screenshots
+Parsing the signature in a more friendly way.
+![sig-edit.png](pictures/sig-edit.png)
+The property editor allows the user to edit the signature.
+![sig-02.png](pictures/sig-02.png)
+Config parser parses product configurations into an easy readable interface.
+![config-01.png](pictures/config-01.png)
+If the config contains the custom signature, the config parser will give the user a hint. 
+![config-01.png](pictures/config-02.png)
+Log parser parses the product logs into a tabular view.
+![logs-01.png](pictures/logs-01.png)
+Support the full-text and properties filter to view the logs. 
+![logs-02.png](pictures/logs-02.png)
 
 ## Setup
 
@@ -52,6 +58,8 @@ bun run dev
 
 ## Production
 
+Because this project contains the Nuxt Pro UI package, make sure you have the license key before making our project into production.
+
 Build the application for production:
 
 ```bash
@@ -84,8 +92,3 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
