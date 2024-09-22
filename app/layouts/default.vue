@@ -86,8 +86,48 @@ const groups = [{
         </template>
 
         <UDashboardSidebarLinks :links="links" />
+        <UDivider />
+        <UAlert
+          title="Support the Project"
+          description="You can support this project by buying me a coffee."
+        >
+          <template #actions>
+            <div class="flex flex-col gap-2 grow">
+              <UButton
+                color="yellow"
+                class="w-full"
+                label="Buy me a coffee"
+                to="https://github.com/onemid/ftnt-sig-creator-dashboard"
+                target="_blank"
+              >
+                <template #leading>
+                  <UIcon
+                    name="i-heroicons-bolt"
+                    class="w-5 h-5"
+                  />
+                </template>
+              </UButton>
+              <UButton
+                color="primary"
+                class="w-full"
+                variant="outline"
+                label="View Github"
+                to="https://github.com/onemid/ftnt-sig-creator-dashboard"
+                target="_blank"
+              >
+                <template #leading>
+                  <UIcon
+                    name="i-heroicons-code-bracket"
+                    class="w-5 h-5"
+                  />
+                </template>
+              </UButton>
+            </div>
+          </template>
+        </UAlert>
 
         <div class="flex-1" />
+        <template #footer />
       </UDashboardSidebar>
     </UDashboardPanel>
 
