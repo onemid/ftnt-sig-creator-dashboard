@@ -97,7 +97,7 @@ const groups = [{
                 color="yellow"
                 class="w-full"
                 label="Buy me a coffee"
-                to="https://github.com/onemid/ftnt-sig-creator-dashboard"
+                to="https://buymeacoffee.com/askmegy"
                 target="_blank"
               >
                 <template #leading>
