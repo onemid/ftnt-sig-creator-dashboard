@@ -47,7 +47,7 @@ const groups = [{
     label: 'View page source',
     icon: 'i-simple-icons-github',
     click: () => {
-      window.open(`https://github.com/nuxt-ui-pro/dashboard/blob/main/pages${route.path === '/' ? '/index' : route.path}.vue`, '_blank')
+      window.open(`https://github.com/onemid/ftnt-sig-creator-dashboard`, '_blank')
     }
   }]
 }]
@@ -117,7 +117,7 @@ const groups = [{
               >
                 <template #leading>
                   <UIcon
-                    name="i-heroicons-code-bracket"
+                    name="i-simple-icons-github"
                     class="w-5 h-5"
                   />
                 </template>
