@@ -4,7 +4,7 @@ const logParser = (log: string): FgtLog => {
   // Regular Expression break down: (--[A-Za-z\[\]\.\_\-0-9]+) *([^;]+)*;*
   const regex = log.trimStart().startsWith('"')
     ? /"([A-Za-z0-9]+) *= *("{1,2}[^"]*"{1,2}|[0-9:.-]+)"(?:\n|$|,)/g
-    : /([A-Za-z0-9]+) *= *("[^"]*"|[0-9:.-]+)*/gm
+    : /([A-Za-z0-9_]+) *= *("[^"]*"|[/\\?\w0-9:.-]+)*/gm
   let m
   const logBodyObject: FgtLogBody[] = []
 
