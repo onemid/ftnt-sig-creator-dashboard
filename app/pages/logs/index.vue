@@ -455,7 +455,7 @@ const clearFilter = () => {
             {{ row.action }}
           </UBadge>
           <UBadge
-            v-else-if="row.action.startsWith === 'drop'"
+            v-else-if="row.action.startsWith('drop')"
             color="red"
             class="font-bold gap-1 uppercase w-full justify-center"
           >
