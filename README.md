@@ -15,11 +15,6 @@ Config parser parses product configurations into an easy readable interface.
 ![config-01.png](pictures/config-01.png)
 If the config contains the custom signature, the config parser will give the user a hint. 
 ![config-01.png](pictures/config-02.png)
-Log parser parses the product logs into a tabular view.
-![logs-01.png](pictures/logs-01.png)
-Support the full-text and properties filter to view the logs. 
-![logs-02.png](pictures/logs-02.png)
-
 ## Setup
 
 Make sure to install the dependencies:
