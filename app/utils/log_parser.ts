@@ -24,7 +24,7 @@ const logParser = (log: string): FgtLog => {
         propString = match
       } else if (groupIndex === 1) {
         propName = match
-      } else if (groupIndex === 2) {
+      } else if (groupIndex === 2 && match) {
         if (match.startsWith('""') && match.endsWith('""')) {
           propVal = match.slice(2, match.length - 2)
         } else if (match.startsWith('"') && match.endsWith('"')) {
