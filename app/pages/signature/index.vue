@@ -3,6 +3,7 @@ import type { SigBody } from '~/types'
 import { useSigsStore } from '~~/stores/signatures'
 import sigMaker from '~/utils/sig_maker'
 import patternFields from '~/data/pattern_fields'
+import { MonacoEditor } from '#components'
 
 const colorMode = useColorMode()
 const sigsStore = useSigsStore()
@@ -11,6 +12,19 @@ const signaturePrettier = ref('')
 const sigObj: Ref<SigBody[] | null> = ref(sigsStore.getSigGroupedObject())
 const signatureOptions: Ref<[]> = ref([])
 const sigObjString: Ref<string | null> = ref(null)
+const editorRef = ref<any>()
+
+const mountMonacoListener = (editor) => {
+  console.log(editor)
+  editor.onDidChangeCursorPosition((e) => {
+    console.log(editor.getSelection())
+    console.log(JSON.stringify(e))
+  })
+
+  editor.onDidChangeCursorSelection((e) => {
+    console.log(JSON.stringify(e))
+  })
+}
 
 const isEditModalOpen = ref(false)
 const editModalTitle = ref('Edit Property')
@@ -149,10 +163,12 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
     >
       <template #header>
         <MonacoEditor
+          ref="editorRef"
           v-model="signature"
           lang="shell"
           class="font-mono w-full h-20 border dark:border-gray-700 rounded p-1"
           :options="{ theme: colorMode.value === 'dark' ? 'vs-dark' : 'vs-light', wordWrap: 'on', minimap: { enabled: false } }"
+          @load="mountMonacoListener"
         />
         <!--        <MonacoEditor -->
         <!--          v-model="signaturePrettier" -->
@@ -175,7 +191,15 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
               class="w-full"
               multiple
               searchable
-            />
+            >
+              <template #label>
+                <span
+                  v-if="selected.length"
+                  class="truncate"
+                >{{ selected.join(', ') }}</span>
+                <span v-else>Select properties</span>
+              </template>
+            </USelectMenu>
             <UButton
               size="sm"
               :variant="selected.length === 0 ? 'soft' : 'solid'"

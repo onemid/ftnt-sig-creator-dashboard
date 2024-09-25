@@ -12,6 +12,16 @@ export default defineNuxtConfig({
     'nuxt-monaco-editor'
   ],
 
+  build: {
+    transpile: ['nuxt-monaco-editor']
+  },
+  vite: {
+
+    ssr: { // if ssr enabled in future, this config is required to load vuetify properly
+      noExternal: ['nuxt-monaco-editor']
+    }
+  },
+
   ui: {
     safelistColors: ['primary', 'red', 'orange', 'green']
   },

@@ -127,7 +127,15 @@ const items = row => [
                 class="w-full"
                 multiple
                 searchable
-              />
+              >
+                <template #label>
+                  <span
+                    v-if="selected.length"
+                    class="truncate"
+                  >{{ selected.join(', ') }}</span>
+                  <span v-else>Select properties</span>
+                </template>
+              </USelectMenu>
               <UButton
                 size="sm"
                 :variant="selected.length === 0 ? 'soft' : 'solid'"

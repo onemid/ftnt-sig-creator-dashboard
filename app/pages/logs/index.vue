@@ -294,7 +294,15 @@ const clearFilter = () => {
                 placeholder="Select properties to preview..."
                 multiple
                 searchable
-              />
+              >
+                <template #label>
+                  <span
+                    v-if="selectedCols.length"
+                    class="truncate"
+                  >{{ selectedCols.map((selectedCol) => selectedCol.label).join(', ') }}</span>
+                  <span v-else>Select properties</span>
+                </template>
+              </USelectMenu>
             </span>
 
             <UButton
