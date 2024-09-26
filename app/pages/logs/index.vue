@@ -136,7 +136,6 @@ const filteredRows = computed(() => {
         tmpResults = tmpResults.filter((obj) => {
           return Object.entries(obj).some((kv) => {
             if (querySplit[0].trim().endsWith('!')) {
-              console.log()
               return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase()))
             }
             return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase())
@@ -298,8 +297,8 @@ const clearFilter = () => {
                 <template #label>
                   <span
                     v-if="selectedCols.length"
-                    class="truncate"
-                  >{{ selectedCols.map((selectedCol) => selectedCol.label).join(', ') }}</span>
+                    class="truncate text-xs font-bold"
+                  >{{ selectedCols.map((selectedCol) => selectedCol.label).join('; ') }}</span>
                   <span v-else>Select properties</span>
                 </template>
               </USelectMenu>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Base64 } from 'js-base64'
 import type { SigBody } from '~/types'
 import { useSigsStore } from '~~/stores/signatures'
 import sigMaker from '~/utils/sig_maker'
@@ -7,7 +8,9 @@ import { MonacoEditor } from '#components'
 
 const colorMode = useColorMode()
 const sigsStore = useSigsStore()
-const signature = ref(sigsStore.getSignature())
+const route = useRoute()
+const router = useRouter()
+const signature = ref(route.query.sig ? Base64.decode(route.query.sig) : sigsStore.getSignature())
 const signaturePrettier = ref('')
 const sigObj: Ref<SigBody[] | null> = ref(sigsStore.getSigGroupedObject())
 const signatureOptions: Ref<[]> = ref([])
@@ -55,6 +58,10 @@ const changeSignature = (sigText: string) => {
 
 watch(signature, (newVal) => {
   changeSignature(newVal)
+  router.push({
+    path: '/signature',
+    query: { sig: Base64.encode(newVal) }
+  })
 }, {
   immediate: true
 })

@@ -22,6 +22,7 @@
     "@unovis/vue": "^1.4.4",
     "@vueuse/nuxt": "^11.0.3",
     "date-fns": "^3.6.0",
+    "js-base64": "^3.7.7",
     "nuxt": "^3.13.1",
     "nuxt-monaco-editor": "^1.2.9",
     "radix-vue": "^1.9.6",
