@@ -111,9 +111,9 @@ const openEditModal = (sigOrder: number, method: 'ADD' | 'EDIT') => {
     editSigBodyVal.value.propOrder = sigObj.value[sigOrder - 1].propOrder
     if (sigObj.value[sigOrder - 1].propName.startsWith('PATTERN')) {
       selectedEditMode.value = 'Pattern'
-      editSigPatBodyVal.value = sigObj.value[sigOrder - 1].propVal
+      editSigPatBodyVal.value = sigObj.value[sigOrder - 1].propVal ?? ''
     } else {
-      editSigBodyVal.value.propVal = sigObj.value[sigOrder - 1].propVal
+      editSigBodyVal.value.propVal = sigObj.value[sigOrder - 1].propName === '--no_case' ? '' : sigObj.value[sigOrder - 1].propVal
     }
     isEditModalOpen.value = true
   }
@@ -704,6 +704,10 @@ const moveSigBody = (sigOrder: number, method: 'ADD' | 'EDIT' | 'UP' | 'DOWN' | 
                 class="italic font-bold"
                 variant="outline"
                 label="CASE INSENSITIVE"
+              />
+              <UInput
+                v-show="false"
+                v-model="editSigPatBodyVal[idx].propVal"
               />
             </UFormGroup>
             <UFormGroup

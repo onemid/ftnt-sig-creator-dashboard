@@ -6,10 +6,10 @@ const sigMaker = (sigObj: SigBody[]): string => {
   sigObj.forEach((obj, idx) => {
     if (Array.isArray(obj.propVal)) {
       obj.propVal.forEach((e) => {
-        signature += (idx === 0 ? '' : ' ') + e.propName + ' ' + e.propVal + ';'
+        signature += (idx === 0 ? '' : ' ') + e.propName + (e.propVal !== '' ? ' ' : '') + e.propVal + ';'
       })
     } else {
-      signature += (idx === 0 ? '' : ' ') + obj.propName + ' ' + obj.propVal + ';'
+      signature += (idx === 0 ? '' : ' ') + obj.propName + (obj.propVal !== '' ? ' ' : '') + obj.propVal + ';'
     }
   })
   signature += ')'

@@ -25,7 +25,7 @@ const sigGrouping = (sigObj: SigBody[]): SigBody[] => {
         patternGroup.push({
           propOrder: patternOrder++,
           propName: item.propName,
-          propVal: item.propVal
+          propVal: item.propVal ?? ''
         })
       } else {
         sigGroupResults.push({

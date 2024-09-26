@@ -29,7 +29,7 @@ const sigParser = (signature: string): SigBody[] => {
     }
     // The result can be accessed through the `m`-variable.
     let propName: string | null = null
-    let propVal: string | null = null
+    let propVal: string | null = ''
     m.forEach((match, groupIndex) => {
       if (groupIndex === 1) {
         propName = match
