@@ -22,12 +22,37 @@ const q = ref('')
 const pq = ref('')
 const isDefaultFilterApplied = ref(false)
 
+const selectedFilters = ref([])
+const filterAppliedOptions = ref([])
+
+const mulFilters = computed({
+  get: () => selectedFilters.value,
+  set: async (filters) => {
+    const promises = filters.map(async (filter) => {
+      if (filter.id) {
+        return filter
+      }
+
+      const response = {
+        id: filterAppliedOptions.value.length + 1,
+        name: filter.name
+      }
+
+      filterAppliedOptions.value.push(response)
+
+      return response
+    })
+
+    selectedFilters.value = await Promise.all(promises)
+  }
+})
+
 const sort = ref({ column: 'eventtime', direction: 'asc' as const })
 const filteredRowsCnt = ref(logsBodyObj.value.length)
 const page = ref(1)
 const pageCount = 22
 
-const filterOptions = ['Fulltext', 'Properties']
+const filterOptions = ['Fulltext', 'Properties', 'Complex']
 const selectedFilterOptions = ref('Fulltext')
 
 const loadLogs = () => {
@@ -101,7 +126,8 @@ watch(selectedCols, () => {
 const filteredRows = computed(() => {
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   filteredRowsCnt.value = logsBodyObj.value.length
-  if (!q.value) {
+  console.log('triggered')
+  if ((selectedFilterOptions.value === 'Complex' && selectedFilters.value.length === 0) && !q.value) {
     return logsBodyObj.value
   }
   const cmpFilteredRows: FgtLogBody[] = logsBodyObj.value
@@ -143,6 +169,32 @@ const filteredRows = computed(() => {
         })
       }
     })
+    results = tmpResults
+  } else if (selectedFilterOptions.value === 'Complex') {
+    let tmpResults: FgtLogBody[] = cmpFilteredRows
+    for (const selectedFilter of selectedFilters.value) {
+      const tmpDictResults = {}
+      const queries = selectedFilter.name.split('||')
+      queries.forEach((query) => {
+        const querySplit = query.trim().split(/=(.*)/s)
+        if (querySplit.length === 3 && querySplit[1].trim() !== '') {
+          const tmpFilterResults = tmpResults.filter((obj) => {
+            return Object.entries(obj).some((kv) => {
+              if (querySplit[0].trim().endsWith('!')) {
+                return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase()))
+              }
+              return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase())
+            })
+          })
+          const tmpDictInnerResults = Object.fromEntries(tmpFilterResults.map(x =>
+            [x.id ?? x.eventtime, x]))
+          Object.assign(tmpDictResults, tmpDictInnerResults)
+        }
+      })
+      tmpResults = Object.entries(tmpDictResults).map((elem) => {
+        return elem[1]
+      })
+    }
     results = tmpResults
   }
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -298,7 +350,7 @@ const clearFilter = () => {
                   <span
                     v-if="selectedCols.length"
                     class="truncate text-xs font-bold"
-                  >{{ selectedCols.map((selectedCol) => selectedCol.label).join('; ') }}</span>
+                  >{{ selectedCols.map((selectedCol) => selectedCol.label.split('(')[0]).join(' ; ') }}</span>
                   <span v-else>Select properties</span>
                 </template>
               </USelectMenu>
@@ -342,12 +394,45 @@ const clearFilter = () => {
               v-if="selectedFilterOptions === 'Properties'"
               v-model="q"
               placeholder="Syntax: Property1=Val_1,Property2=Val_2,..."
-              class="w-full"
+              class="w-full font-mono"
             >
               <template #trailing>
                 <span class="text-gray-500 dark:text-gray-400 text-xs">{{ filteredRowsCnt }} results</span>
               </template>
             </UInput>
+            <USelectMenu
+              v-if="selectedFilterOptions === 'Complex'"
+              v-model="mulFilters"
+              name="mulFilters"
+              class="w-full"
+              :options="filterAppliedOptions"
+              option-attribute="name"
+              multiple
+              searchable
+              creatable
+              clear-search-on-close
+              :show-create-option-when="'always'"
+            >
+              <template #option-create="{ option }">
+                <span class="flex-shrink-0 font-bold">Create New Query:</span>
+                <span class="block truncate font-mono">{{ option.name }}</span>
+              </template>
+              <template #label>
+                <template v-if="mulFilters.length">
+                  <span
+                    v-if="mulFilters.length"
+                    class="truncate font-mono"
+                  >{{ mulFilters.map((filter) => { return filter.name }).join(' AND ') }}</span>
+                </template>
+                <template v-else>
+                  <span class="text-gray-500 dark:text-gray-400 truncate font-mono">Syntax: Property1=Val_1||Property2=Val_2||..</span>
+                </template>
+              </template>
+
+              <template #option="{ option }">
+                <span class="truncate font-mono">{{ option.name }}</span>
+              </template>
+            </USelectMenu>
           </div>
         </div>
       </template>

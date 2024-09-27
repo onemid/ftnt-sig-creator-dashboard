@@ -8,7 +8,7 @@ const logParser = (log: string): FgtLog => {
   let m
   const logBodyObject: FgtLogBody[] = []
 
-  let eventtime: number | null = null
+  let eventTime: number | null = null
   let order = 0
   while ((m = regex.exec(log)) !== null) {
     // This is necessary to avoid infinite loops with zero-width matches
@@ -35,7 +35,7 @@ const logParser = (log: string): FgtLog => {
       }
     })
     if (propName === 'eventtime') {
-      eventtime = parseInt(propVal)
+      eventTime = parseInt(propVal)
     }
     logBodyObject.push({
       propOrder: ++order,
@@ -47,7 +47,7 @@ const logParser = (log: string): FgtLog => {
 
   return {
     logOrder: -1,
-    logTime: eventtime,
+    logTime: eventTime,
     log: logBodyObject
   }
 }
