@@ -20,6 +20,7 @@ const isLoading = ref(false)
 
 const q = ref('')
 const pq = ref('')
+const newQuery = ref('')
 const isDefaultFilterApplied = ref(false)
 
 const selectedFilters = ref([])
@@ -118,16 +119,21 @@ watch(selectedCols, () => {
   })
 })
 
-// const sort = ref({
-//   column: 'eventtime',
-//   direction: 'asc'
-// })
+const addMulFilter = () => {
+  mulFilters.value.push({ id: mulFilters.value.length, name: newQuery.value })
+  newQuery.value = ''
+}
+
+const deleteMulFilter = (idx: number) => {
+  mulFilters.value.splice(idx, 1)
+}
 
 const filteredRows = computed(() => {
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   filteredRowsCnt.value = logsBodyObj.value.length
   console.log('triggered')
-  if ((selectedFilterOptions.value === 'Complex' && selectedFilters.value.length === 0) && !q.value) {
+  if ((selectedFilterOptions.value === 'Complex' && selectedFilters.value.length === 0)
+    || ((selectedFilterOptions.value === 'Fulltext' || selectedFilterOptions.value === 'Properties') && !q.value)) {
     return logsBodyObj.value
   }
   const cmpFilteredRows: FgtLogBody[] = logsBodyObj.value
@@ -400,39 +406,84 @@ const clearFilter = () => {
                 <span class="text-gray-500 dark:text-gray-400 text-xs">{{ filteredRowsCnt }} results</span>
               </template>
             </UInput>
-            <USelectMenu
+            <div
               v-if="selectedFilterOptions === 'Complex'"
-              v-model="mulFilters"
-              name="mulFilters"
-              class="w-full"
-              :options="filterAppliedOptions"
-              option-attribute="name"
-              multiple
-              searchable
-              creatable
-              clear-search-on-close
-              :show-create-option-when="'always'"
+              class="flex gap-1"
             >
-              <template #option-create="{ option }">
-                <span class="flex-shrink-0 font-bold">Create New Query:</span>
-                <span class="block truncate font-mono">{{ option.name }}</span>
-              </template>
-              <template #label>
-                <template v-if="mulFilters.length">
-                  <span
-                    v-if="mulFilters.length"
-                    class="truncate font-mono"
-                  >{{ mulFilters.map((filter) => { return filter.name }).join(' AND ') }}</span>
-                </template>
-                <template v-else>
-                  <span class="text-gray-500 dark:text-gray-400 truncate font-mono">Syntax: Property1=Val_1||Property2=Val_2||..</span>
-                </template>
-              </template>
+              <div
+                v-for="(mulFilter, idx) in mulFilters"
+                :key="idx"
+                class="flex gap-1 items-center font-mono"
+              >
+                <UPopover>
+                  <UButton
+                    color="white"
+                    :label="mulFilter.name"
+                    trailing-icon="i-heroicons-pencil-square"
+                  />
 
-              <template #option="{ option }">
-                <span class="truncate font-mono">{{ option.name }}</span>
-              </template>
-            </USelectMenu>
+                  <template #panel>
+                    <div class="p-4">
+                      <UButtonGroup
+
+                        size="sm"
+                        orientation="horizontal"
+                      >
+                        <UInput
+                          v-model="mulFilters[idx].name "
+                          placeholder="Filter logs anywhere..."
+                        />
+                        <UButton
+                          icon="i-heroicons-check"
+                          color="green"
+                        />
+                        <UButton
+                          icon="i-heroicons-trash"
+                          color="red"
+                          @click="deleteMulFilter"
+                        />
+                      </UButtonGroup>
+                    </div>
+                  </template>
+                </UPopover>
+                <div
+                  v-if="idx !== mulFilters.length - 1"
+                  class="font-bold"
+                >
+                  AND
+                </div>
+              </div>
+              <div
+                class="font-bold"
+              >
+                <UPopover>
+                  <UButton
+                    color="green"
+                    :label="!mulFilters.length ? 'Add Filter' : ''"
+                    trailing-icon="i-heroicons-plus"
+                  />
+
+                  <template #panel>
+                    <div class="p-4">
+                      <UButtonGroup
+                        size="sm"
+                        orientation="horizontal"
+                      >
+                        <UInput
+                          v-model="newQuery"
+                          placeholder="Place the query..."
+                        />
+                        <UButton
+                          icon="i-heroicons-check"
+                          color="green"
+                          @click="addMulFilter"
+                        />
+                      </UButtonGroup>
+                    </div>
+                  </template>
+                </UPopover>
+              </div>
+            </div>
           </div>
         </div>
       </template>
