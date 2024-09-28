@@ -124,8 +124,14 @@ const addMulFilter = () => {
   newQuery.value = ''
 }
 
+const editMulFilter = (idx: number) => {
+  mulFilters.value[idx] = { id: idx, name: newQuery.value }
+  newQuery.value = ''
+}
+
 const deleteMulFilter = (idx: number) => {
   mulFilters.value.splice(idx, 1)
+  newQuery.value = ''
 }
 
 const filteredRows = computed(() => {
@@ -408,39 +414,40 @@ const clearFilter = () => {
             </UInput>
             <div
               v-if="selectedFilterOptions === 'Complex'"
-              class="flex gap-1"
+              class="flex gap-1  flex-wrap"
             >
               <div
                 v-for="(mulFilter, idx) in mulFilters"
                 :key="idx"
                 class="flex gap-1 items-center font-mono"
               >
-                <UPopover>
+                <UPopover :popper="{ placement: 'top-start' }">
                   <UButton
                     color="white"
-                    :label="mulFilter.name"
+                    :label="`(${mulFilter.name.split('||').join(' OR ')})`"
                     trailing-icon="i-heroicons-pencil-square"
+                    @click="() => { newQuery = mulFilters[idx].name }"
                   />
 
                   <template #panel>
                     <div class="p-4">
                       <UButtonGroup
-
                         size="sm"
                         orientation="horizontal"
                       >
                         <UInput
-                          v-model="mulFilters[idx].name "
+                          v-model="newQuery"
                           placeholder="Filter logs anywhere..."
                         />
                         <UButton
                           icon="i-heroicons-check"
                           color="green"
+                          @click="editMulFilter(idx)"
                         />
                         <UButton
                           icon="i-heroicons-trash"
                           color="red"
-                          @click="deleteMulFilter"
+                          @click="deleteMulFilter(idx)"
                         />
                       </UButtonGroup>
                     </div>
@@ -456,7 +463,7 @@ const clearFilter = () => {
               <div
                 class="font-bold"
               >
-                <UPopover>
+                <UPopover :popper="{ placement: 'top-start' }">
                   <UButton
                     color="green"
                     :label="!mulFilters.length ? 'Add Filter' : ''"
