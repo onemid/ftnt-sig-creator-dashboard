@@ -140,44 +140,25 @@ const filteredRows = computed(() => {
   filteredRowsCnt.value = logsBodyObj.value.length
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   page.value = 1
+  let results: FgtLogBody[] = []
   if ((selectedFilterOptions.value === 'Complex' && selectedFilters.value.length === 0)
     || ((selectedFilterOptions.value === 'Fulltext' || selectedFilterOptions.value === 'Properties') && !q.value)) {
-    return logsBodyObj.value
-  }
-  const cmpFilteredRows: FgtLogBody[] = logsBodyObj.value
-  let results: FgtLogBody[] = []
-  if (selectedFilterOptions.value === 'Fulltext') {
-    results = cmpFilteredRows.filter((obj) => {
-      return Object.entries(obj).some((kv) => {
-        return (String(kv[0]) + '=' + String(kv[1])).toLowerCase().includes(q.value.toLowerCase())
-      })
-    })
-  } else if (selectedFilterOptions.value === 'Properties') {
-    const queries = q.value.split(',')
-    let tmpResults: FgtLogBody[] = cmpFilteredRows
-    queries.forEach((query) => {
-      const querySplit = query.trim().split(/=(.*)/s)
-      if (querySplit.length === 3 && querySplit[1].trim() !== '') {
-        tmpResults = tmpResults.filter((obj) => {
-          return Object.entries(obj).some((kv) => {
-            if (querySplit[0].trim().endsWith('!')) {
-              return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase()))
-            }
-            return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase())
-          })
+    results = logsBodyObj.value
+  } else {
+    const cmpFilteredRows: FgtLogBody[] = logsBodyObj.value
+    if (selectedFilterOptions.value === 'Fulltext') {
+      results = cmpFilteredRows.filter((obj) => {
+        return Object.entries(obj).some((kv) => {
+          return (String(kv[0]) + '=' + String(kv[1])).toLowerCase().includes(q.value.toLowerCase())
         })
-      }
-    })
-    results = tmpResults
-  } else if (selectedFilterOptions.value === 'Complex') {
-    let tmpResults: FgtLogBody[] = cmpFilteredRows
-    for (const selectedFilter of selectedFilters.value) {
-      const tmpDictResults = {}
-      const queries = selectedFilter.name.split('||')
+      })
+    } else if (selectedFilterOptions.value === 'Properties') {
+      const queries = q.value.split(',')
+      let tmpResults: FgtLogBody[] = cmpFilteredRows
       queries.forEach((query) => {
         const querySplit = query.trim().split(/=(.*)/s)
         if (querySplit.length === 3 && querySplit[1].trim() !== '') {
-          const tmpFilterResults = tmpResults.filter((obj) => {
+          tmpResults = tmpResults.filter((obj) => {
             return Object.entries(obj).some((kv) => {
               if (querySplit[0].trim().endsWith('!')) {
                 return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase()))
@@ -185,22 +166,46 @@ const filteredRows = computed(() => {
               return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase())
             })
           })
-          const tmpDictInnerResults = Object.fromEntries(tmpFilterResults.map(x =>
-            [x.id ?? x.eventtime, x]))
-          Object.assign(tmpDictResults, tmpDictInnerResults)
         }
       })
-      tmpResults = Object.entries(tmpDictResults).map((elem) => {
-        return elem[1]
-      })
+      results = tmpResults
+    } else if (selectedFilterOptions.value === 'Complex') {
+      let tmpResults: FgtLogBody[] = cmpFilteredRows
+      for (const selectedFilter of selectedFilters.value) {
+        const tmpDictResults = {}
+        const queries = selectedFilter.name.split('||')
+        queries.forEach((query) => {
+          const querySplit = query.trim().split(/=(.*)/s)
+          if (querySplit.length === 3 && querySplit[1].trim() !== '') {
+            const tmpFilterResults = tmpResults.filter((obj) => {
+              return Object.entries(obj).some((kv) => {
+                if (querySplit[0].trim().endsWith('!')) {
+                  return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase()))
+                }
+                return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase())
+              })
+            })
+            const tmpDictInnerResults = Object.fromEntries(tmpFilterResults.map(x =>
+              [x.id ?? x.eventtime, x]))
+            Object.assign(tmpDictResults, tmpDictInnerResults)
+          }
+        })
+        tmpResults = Object.entries(tmpDictResults).map((elem) => {
+          return elem[1]
+        })
+      }
+      results = tmpResults
     }
-    results = tmpResults
   }
 
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   filteredRowsCnt.value = results.length
 
-  return filteredRowsCnt.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+  return results
+})
+
+const rows = computed(() => {
+  return filteredRows.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
 watch(sort, () => {
@@ -482,7 +487,7 @@ const clearFilter = () => {
       v-if="filteredRows.length > 0"
       v-model:sort="sort"
       :loading="isLoading"
-      :rows="filteredRows"
+      :rows="rows"
       class="w-full mt-1 font-mono"
       :columns="[...selectedCols, ...remainedSelectedCols]"
       sort-mode="manual"
