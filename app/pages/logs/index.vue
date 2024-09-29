@@ -179,25 +179,27 @@ const filteredRows = computed(() => {
           if (querySplit.length === 3 && querySplit[1].trim() !== '') {
             const tmpFilterResults = tmpResults.filter((obj) => {
               return Object.entries(obj).some((kv) => {
-                if (querySplit[0].trim().endsWith('!')) {
-                  if (querySplit[1].trim().startsWith('*') && querySplit[1].trim().endsWith('*')) {
-                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().includes(querySplit[1].trim().toLowerCase().slice(1, -1)))
-                  } else if (querySplit[1].trim().startsWith('*')) {
-                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().endsWith(querySplit[1].trim().toLowerCase().slice(1)))
-                  } else if (querySplit[1].trim().endsWith('*')) {
-                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase().slice(0, -1)))
+                querySplit[0] = querySplit[0].trim().toLowerCase()
+                querySplit[1] = querySplit[1].trim().toLowerCase()
+                if (querySplit[0].endsWith('!')) {
+                  if (querySplit[1].startsWith('*') && querySplit[1].endsWith('*')) {
+                    return String(kv[0]) + '!' === querySplit[0] && !(String(kv[1]).toLowerCase().includes(querySplit[1].slice(1, -1)))
+                  } else if (querySplit[1].startsWith('*')) {
+                    return String(kv[0]) + '!' === querySplit[0] && !(String(kv[1]).toLowerCase().endsWith(querySplit[1].slice(1)))
+                  } else if (querySplit[1].endsWith('*')) {
+                    return String(kv[0]) + '!' === querySplit[0] && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].slice(0, -1)))
                   } else {
-                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase() === (querySplit[1].trim().toLowerCase()))
+                    return String(kv[0]) + '!' === querySplit[0] && !(String(kv[1]).toLowerCase() === (querySplit[1]))
                   }
                 } else {
-                  if (querySplit[1].trim().startsWith('*') && querySplit[1].trim().endsWith('*')) {
-                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().includes(querySplit[1].trim().toLowerCase().slice(1, -1))
+                  if (querySplit[1].startsWith('*') && querySplit[1].endsWith('*')) {
+                    return String(kv[0]) === querySplit[0] && String(kv[1]).toLowerCase().includes(querySplit[1].slice(1, -1))
                   } else if (querySplit[1].trim().startsWith('*')) {
-                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().endsWith(querySplit[1].trim().toLowerCase().slice(1))
+                    return String(kv[0]) === querySplit[0] && String(kv[1]).toLowerCase().endsWith(querySplit[1].slice(1))
                   } else if (querySplit[1].trim().endsWith('*')) {
-                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase().slice(0, -1))
+                    return String(kv[0]) === querySplit[0] && String(kv[1]).toLowerCase().startsWith(querySplit[1].slice(0, -1))
                   } else {
-                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase() === (querySplit[1].trim().toLowerCase())
+                    return String(kv[0]) === querySplit[0] && String(kv[1]).toLowerCase() === (querySplit[1])
                   }
                 }
               })
