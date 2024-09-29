@@ -58,9 +58,11 @@ const selectedFilterOptions = ref('Fulltext')
 
 const loadLogs = () => {
   isLoading.value = true
+  logsStore.setLogs(logsStore.logs)
   logsObj.value = logsStore.getLogsObject()
   if (logs.value.length > 0 && logsObj.value.length === 0) {
     parsingLogs()
+    return
   }
   postProcess()
   isLoading.value = false
@@ -83,7 +85,6 @@ const postProcess = () => {
   logsObjString.value = JSON.stringify(logsOptions.value)
   const arrayOfCols = Array.from(logsStore.columns)
   logsParsedColumns.value = arrayOfCols.map((elem) => {
-    console.log(elem, fields[elem])
     if (fields[elem]) {
       return {
         key: elem,
@@ -137,7 +138,8 @@ const deleteMulFilter = (idx: number) => {
 const filteredRows = computed(() => {
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   filteredRowsCnt.value = logsBodyObj.value.length
-  console.log('triggered')
+  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+  page.value = 1
   if ((selectedFilterOptions.value === 'Complex' && selectedFilters.value.length === 0)
     || ((selectedFilterOptions.value === 'Fulltext' || selectedFilterOptions.value === 'Properties') && !q.value)) {
     return logsBodyObj.value
@@ -151,21 +153,6 @@ const filteredRows = computed(() => {
       })
     })
   } else if (selectedFilterOptions.value === 'Properties') {
-    // let queries = q.value.split(',')
-    // queries.forEach((query) => {
-    //   const querySplit = query.trim().split(/=(.*)/s)
-    //   let tmpResults: FgtLogBody[] = []
-    //   if (querySplit.length === 3 && querySplit[1].trim() !== '') {
-    //     tmpResults = cmpFilteredRows.filter((obj) => {
-    //       return Object.entries(obj).some((kv) => {
-    //         return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase())
-    //       })
-    //     })
-    //   }
-    //   results = results.concat(tmpResults)
-    // })
-
-    // AND Op
     const queries = q.value.split(',')
     let tmpResults: FgtLogBody[] = cmpFilteredRows
     queries.forEach((query) => {
@@ -209,11 +196,11 @@ const filteredRows = computed(() => {
     }
     results = tmpResults
   }
-  // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-  page.value = 1
+
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties
   filteredRowsCnt.value = results.length
-  return results
+
+  return filteredRowsCnt.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
 watch(sort, () => {
@@ -227,10 +214,6 @@ watch(sort, () => {
       return bStr.localeCompare(aStr)
     }
   })
-})
-
-const pageRows = computed(() => {
-  return filteredRows.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
 const defaultFilter = () => {
@@ -496,10 +479,10 @@ const clearFilter = () => {
       </template>
     </UCard>
     <UTable
-      v-if="logsBodyObj.length > 0"
+      v-if="filteredRows.length > 0"
       v-model:sort="sort"
       :loading="isLoading"
-      :rows="logsBodyObj.length > 0 ? pageRows : []"
+      :rows="filteredRows"
       class="w-full mt-1 font-mono"
       :columns="[...selectedCols, ...remainedSelectedCols]"
       sort-mode="manual"
