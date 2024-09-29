@@ -180,9 +180,26 @@ const filteredRows = computed(() => {
             const tmpFilterResults = tmpResults.filter((obj) => {
               return Object.entries(obj).some((kv) => {
                 if (querySplit[0].trim().endsWith('!')) {
-                  return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase()))
+                  if (querySplit[1].trim().startsWith('*') && querySplit[1].trim().endsWith('*')) {
+                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().includes(querySplit[1].trim().toLowerCase().slice(1, -1)))
+                  } else if (querySplit[1].trim().startsWith('*')) {
+                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().endsWith(querySplit[1].trim().toLowerCase().slice(1)))
+                  } else if (querySplit[1].trim().endsWith('*')) {
+                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase().slice(0, -1)))
+                  } else {
+                    return String(kv[0]) + '!' === querySplit[0].trim() && !(String(kv[1]).toLowerCase() === (querySplit[1].trim().toLowerCase()))
+                  }
+                } else {
+                  if (querySplit[1].trim().startsWith('*') && querySplit[1].trim().endsWith('*')) {
+                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().includes(querySplit[1].trim().toLowerCase().slice(1, -1))
+                  } else if (querySplit[1].trim().startsWith('*')) {
+                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().endsWith(querySplit[1].trim().toLowerCase().slice(1))
+                  } else if (querySplit[1].trim().endsWith('*')) {
+                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase().slice(0, -1))
+                  } else {
+                    return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase() === (querySplit[1].trim().toLowerCase())
+                  }
                 }
-                return String(kv[0]) === querySplit[0].trim() && String(kv[1]).toLowerCase().startsWith(querySplit[1].trim().toLowerCase())
               })
             })
             const tmpDictInnerResults = Object.fromEntries(tmpFilterResults.map(x =>
