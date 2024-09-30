@@ -17,6 +17,8 @@ const selectedCols = ref([])
 const remainedSelectedCols = ref([])
 const isLogsModalOpen = ref(false)
 const isLoading = ref(false)
+const isAddPopoverOpen = ref(false)
+const isEditPopoverOpen = ref(false)
 
 const q = ref('')
 const pq = ref('')
@@ -122,16 +124,19 @@ watch(selectedCols, () => {
 
 const addMulFilter = () => {
   mulFilters.value.push({ id: mulFilters.value.length, name: newQuery.value })
+  isAddPopoverOpen.value = false
   newQuery.value = ''
 }
 
 const editMulFilter = (idx: number) => {
   mulFilters.value[idx] = { id: idx, name: newQuery.value }
+  isEditPopoverOpen.value = false
   newQuery.value = ''
 }
 
 const deleteMulFilter = (idx: number) => {
   mulFilters.value.splice(idx, 1)
+  isEditPopoverOpen.value = false
   newQuery.value = ''
 }
 
@@ -428,7 +433,9 @@ const clearFilter = () => {
                 :key="idx"
                 class="flex gap-1 items-center font-mono"
               >
-                <UPopover :popper="{ placement: 'top-start' }">
+                <UPopover
+                  :popper="{ placement: 'top-start' }"
+                >
                   <UButton
                     color="white"
                     :label="`(${mulFilter.name.split('||').join(' OR ')})`"
@@ -468,9 +475,11 @@ const clearFilter = () => {
                 </div>
               </div>
               <div
-                class="font-bold"
+                class="font-bold gap-1 flex flex-wrap"
               >
-                <UPopover :popper="{ placement: 'top-start' }">
+                <UPopover
+                  v-model:open="isAddPopoverOpen"
+                >
                   <UButton
                     color="green"
                     :label="!mulFilters.length ? 'Add Filter' : ''"
@@ -481,10 +490,12 @@ const clearFilter = () => {
                     <div class="p-4">
                       <UButtonGroup
                         size="sm"
+                        class="w-full"
                         orientation="horizontal"
                       >
                         <UInput
                           v-model="newQuery"
+                          class="w-full"
                           placeholder="Place the query..."
                         />
                         <UButton
@@ -493,6 +504,51 @@ const clearFilter = () => {
                           @click="addMulFilter"
                         />
                       </UButtonGroup>
+                    </div>
+                  </template>
+                </UPopover>
+                <UPopover>
+                  <UButton
+                    color="primary"
+                    variant="outline"
+                    trailing-icon="i-heroicons-question-mark-circle"
+                  />
+
+                  <template #panel>
+                    <UDivider
+                      label="Basic Usage"
+                      class="pt-4"
+                    />
+                    <div class="p-4 text-xs">
+                      Syntax: <span class="font-mono">PropertyName=DesireValue</span>
+                      <br>
+                      Example: <span class="font-mono">srcport=8080</span>
+                    </div>
+                    <UDivider label="[Or] Query Syntax" />
+                    <div class="p-4 text-xs">
+                      Syntax: <span class="font-mono">Prop1=Val1||Prop2=Val2||...</span>
+                      <br>
+                      Example: <span class="font-mono">srcport=8080||srcport=443</span>
+                    </div>
+                    <UDivider label="[And] Query Syntax" />
+                    <div class="p-4 text-xs">
+                      Simply Click the <span class="font-bold">Add Filter</span> button to add a new filter.
+                    </div>
+                    <UDivider label="Wildcard Syntax" />
+                    <div class="p-4 text-xs">
+                      Match Start: <span class="font-mono">PropertyName=ABC*</span>
+                      <br>
+                      Example: <span class="font-mono">srcport=80*</span> (match the text which prefix is 80)
+                      <br>
+                      <br>
+                      Match End: <span class="font-mono">PropertyName=*ABC</span>
+                      <br>
+                      Example: <span class="font-mono">srcport=*80</span> (match the text which suffix is 80)
+                      <br>
+                      <br>
+                      Match Include: <span class="font-mono">PropertyName=*ABC*</span>
+                      <br>
+                      Example: <span class="font-mono">srcport=*80*</span> (match the text which includes 80)
                     </div>
                   </template>
                 </UPopover>
