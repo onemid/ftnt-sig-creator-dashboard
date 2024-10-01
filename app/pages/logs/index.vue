@@ -444,14 +444,17 @@ const clearFilter = () => {
                   />
 
                   <template #panel>
-                    <div class="p-4">
+                    <div class="p-4 w-96">
                       <UButtonGroup
                         size="sm"
+                        class="w-full"
                         orientation="horizontal"
                       >
                         <UInput
                           v-model="newQuery"
-                          placeholder="Filter logs anywhere..."
+                          class="w-full"
+                          autofocus
+                          placeholder="Place the query..."
                         />
                         <UButton
                           icon="i-heroicons-check"
@@ -477,9 +480,7 @@ const clearFilter = () => {
               <div
                 class="font-bold gap-1 flex flex-wrap"
               >
-                <UPopover
-                  v-model:open="isAddPopoverOpen"
-                >
+                <UPopover>
                   <UButton
                     color="green"
                     :label="!mulFilters.length ? 'Add Filter' : ''"
@@ -487,7 +488,7 @@ const clearFilter = () => {
                   />
 
                   <template #panel>
-                    <div class="p-4">
+                    <div class="p-4 w-96">
                       <UButtonGroup
                         size="sm"
                         class="w-full"
@@ -495,6 +496,7 @@ const clearFilter = () => {
                       >
                         <UInput
                           v-model="newQuery"
+                          autofocus
                           class="w-full"
                           placeholder="Place the query..."
                         />
@@ -515,40 +517,42 @@ const clearFilter = () => {
                   />
 
                   <template #panel>
-                    <UDivider
-                      label="Basic Usage"
-                      class="pt-4"
-                    />
-                    <div class="p-4 text-xs">
-                      Syntax: <span class="font-mono">PropertyName=DesireValue</span>
-                      <br>
-                      Example: <span class="font-mono">srcport=8080</span>
-                    </div>
-                    <UDivider label="[Or] Query Syntax" />
-                    <div class="p-4 text-xs">
-                      Syntax: <span class="font-mono">Prop1=Val1||Prop2=Val2||...</span>
-                      <br>
-                      Example: <span class="font-mono">srcport=8080||srcport=443</span>
-                    </div>
-                    <UDivider label="[And] Query Syntax" />
-                    <div class="p-4 text-xs">
-                      Simply Click the <span class="font-bold">Add Filter</span> button to add a new filter.
-                    </div>
-                    <UDivider label="Wildcard Syntax" />
-                    <div class="p-4 text-xs">
-                      Match Start: <span class="font-mono">PropertyName=ABC*</span>
-                      <br>
-                      Example: <span class="font-mono">srcport=80*</span> (match the text which prefix is 80)
-                      <br>
-                      <br>
-                      Match End: <span class="font-mono">PropertyName=*ABC</span>
-                      <br>
-                      Example: <span class="font-mono">srcport=*80</span> (match the text which suffix is 80)
-                      <br>
-                      <br>
-                      Match Include: <span class="font-mono">PropertyName=*ABC*</span>
-                      <br>
-                      Example: <span class="font-mono">srcport=*80*</span> (match the text which includes 80)
+                    <div class="w-96">
+                      <UDivider
+                        label="Basic Usage"
+                        class="pt-4"
+                      />
+                      <div class="p-4 text-xs">
+                        Syntax: <span class="font-mono">PropertyName=DesireValue</span>
+                        <br>
+                        Example: <span class="font-mono">srcport=8080</span>
+                      </div>
+                      <UDivider label="[Or] Query Syntax" />
+                      <div class="p-4 text-xs">
+                        Syntax: <span class="font-mono">Prop1=Val1||Prop2=Val2||...</span>
+                        <br>
+                        Example: <span class="font-mono">srcport=8080||srcport=443</span>
+                      </div>
+                      <UDivider label="[And] Query Syntax" />
+                      <div class="p-4 text-xs">
+                        Simply Click the <span class="font-bold">Add Filter</span> button to add a new filter.
+                      </div>
+                      <UDivider label="Wildcard Syntax" />
+                      <div class="p-4 text-xs">
+                        Match Start: <span class="font-mono">PropertyName=ABC*</span>
+                        <br>
+                        Example: <span class="font-mono">srcport=80*</span> (match the text which prefix is 80)
+                        <br>
+                        <br>
+                        Match End: <span class="font-mono">PropertyName=*ABC</span>
+                        <br>
+                        Example: <span class="font-mono">srcport=*80</span> (match the text which suffix is 80)
+                        <br>
+                        <br>
+                        Match Include: <span class="font-mono">PropertyName=*ABC*</span>
+                        <br>
+                        Example: <span class="font-mono">srcport=*80*</span> (match the text which includes 80)
+                      </div>
                     </div>
                   </template>
                 </UPopover>
