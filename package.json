@@ -1,9 +1,13 @@
 {
   "name": "nuxt-ui-pro-template-dashboard",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
     "build": "nuxt build",
+    "electron:dev": "nuxt dev && electron .",
+    "electron:build": "nuxt build && electron-builder && cp ./dist-electron/main.js ./dist-electron/main.cjs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -32,7 +36,12 @@
   "devDependencies": {
     "@nuxt/eslint": "^0.5.6",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.10.0",
+    "nuxt-electron": "^0.7.0",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6",
     "vue-tsc": "^2.1.6"
   },
   "packageManager": "pnpm@9.1.4+sha512.9df9cf27c91715646c7d675d1c9c8e41f6fce88246f1318c1aa6a1ed1aeb3c4f032fcdf4ba63cc69c4fe6d634279176b5358727d8f2cc1e65b65f43ce2f8bfb0"
