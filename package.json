@@ -6,9 +6,9 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "build": "nuxt build",
-    "electron:dev": "nuxt dev && electron .",
-    "electron:build": "nuxt build && electron-builder && cp ./dist-electron/main.js ./dist-electron/main.cjs",
-    "dev": "nuxt dev",
+    "electron:dev": "nuxt dev  --no-fork && electron .",
+    "electron:build": "nuxt build --prerender  && electron-builder && cp ./dist-electron/main.js ./dist-electron/main.cjs",
+    "dev": "nuxt dev  --no-fork",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",

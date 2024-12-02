@@ -3,6 +3,13 @@ export default defineNuxtConfig({
   extends: ['@nuxt/ui-pro'],
 
   modules: [
+    (options, nuxt) => {
+      if (!nuxt.options.dev) {
+        nuxt.options.nitro.runtimeConfig ??= {}
+        nuxt.options.nitro.runtimeConfig.app ??= {}
+        nuxt.options.nitro.runtimeConfig.app.baseURL = './'
+      }
+    },
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/ui',
@@ -30,9 +37,15 @@ export default defineNuxtConfig({
     // Ployfill the Electron and Node.js API for Renderer process.
     // If you want use Node.js in Renderer process, the `nodeIntegration` needs to be enabled in the Main process.
     // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
-    renderer: {}
+    renderer: {},
+    disableDefaultOptions: true
   },
   ssr: false,
+  router: {
+    options: {
+      hashMode: true
+    }
+  },
   build: {
     transpile: ['nuxt-monaco-editor']
   },
