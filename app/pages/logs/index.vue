@@ -53,7 +53,8 @@ const mulFilters = computed({
 const sort = ref({ column: 'eventtime', direction: 'asc' as const })
 const filteredRowsCnt = ref(logsBodyObj.value.length)
 const page = ref(1)
-const pageCount = 22
+// const pageCount = 22
+const pageCount = 100
 
 const filterOptions = ['Fulltext', 'Properties', 'Complex']
 const selectedFilterOptions = ref('Fulltext')
