@@ -19,6 +19,7 @@ const isLogsModalOpen = ref(false)
 const isLoading = ref(false)
 const isAddPopoverOpen = ref(false)
 const isEditPopoverOpen = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
 
 const q = ref('')
 const pq = ref('')
@@ -276,6 +277,24 @@ const clearFilter = () => {
   remainedSelectedCols.value = logsBodyObj.value
   isDefaultFilterApplied.value = false
 }
+
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const content = e.target?.result as string
+      logs.value = content
+    }
+    reader.readAsText(file)
+  }
+}
+
+const triggerFileUpload = () => {
+  fileInput.value?.click()
+}
 </script>
 
 <template>
@@ -310,16 +329,33 @@ const clearFilter = () => {
                     <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
                       Paste Logs
                     </h3>
-                    <UButton
-                      color="gray"
-                      variant="ghost"
-                      icon="i-heroicons-x-mark-20-solid"
-                      class="-my-1"
-                      @click="() => {
-                        isLogsModalOpen = false
-                        logs = logsStore.getLogs()
-                      }"
-                    />
+                    <div class="flex items-center gap-2">
+                      <input
+                        ref="fileInput"
+                        type="file"
+                        accept=".txt,.log"
+                        class="hidden"
+                        @change="handleFileUpload"
+                      >
+                      <UButton
+                        color="blue"
+                        variant="soft"
+                        icon="i-heroicons-arrow-up-tray"
+                        @click="triggerFileUpload"
+                      >
+                        Upload File
+                      </UButton>
+                      <UButton
+                        color="gray"
+                        variant="ghost"
+                        icon="i-heroicons-x-mark-20-solid"
+                        class="-my-1"
+                        @click="() => {
+                          isLogsModalOpen = false
+                          logs = logsStore.getLogs()
+                        }"
+                      />
+                    </div>
                   </div>
                 </template>
                 <MonacoEditor
@@ -346,6 +382,16 @@ const clearFilter = () => {
                 </UButton>
               </UCard>
             </UModal>
+            <input
+              ref="fileInput"
+              type="file"
+              style="display: none"
+              @change="handleFileUpload"
+            />
+            <UButton
+              label="Upload Logs"
+              @click="triggerFileUpload"
+            />
             <span
               v-if="isDefaultFilterApplied"
               class="w-full"
