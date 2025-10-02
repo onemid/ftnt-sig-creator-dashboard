@@ -281,7 +281,7 @@ const clearFilter = () => {
 const handleFileUpload = (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
-  
+
   if (file) {
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -382,16 +382,6 @@ const triggerFileUpload = () => {
                 </UButton>
               </UCard>
             </UModal>
-            <input
-              ref="fileInput"
-              type="file"
-              style="display: none"
-              @change="handleFileUpload"
-            />
-            <UButton
-              label="Upload Logs"
-              @click="triggerFileUpload"
-            />
             <span
               v-if="isDefaultFilterApplied"
               class="w-full"
