@@ -54,8 +54,8 @@ const mulFilters = computed({
 const sort = ref({ column: 'eventtime', direction: 'asc' as const })
 const filteredRowsCnt = ref(logsBodyObj.value.length)
 const page = ref(1)
-// const pageCount = 22
-const pageCount = 100
+const pageCount = ref(100)
+const pageCountOptions = [10, 20, 50, 100, 200, 500, 1000, 'ALL']
 
 const filterOptions = ['Fulltext', 'Properties', 'Complex']
 const selectedFilterOptions = ref('Fulltext')
@@ -231,7 +231,10 @@ const filteredRows = computed(() => {
 })
 
 const rows = computed(() => {
-  return filteredRows.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+  if (pageCount.value === 'ALL') {
+    return filteredRows.value
+  }
+  return filteredRows.value.slice((page.value - 1) * pageCount.value, (page.value) * pageCount.value)
 })
 
 watch(sort, () => {
@@ -903,9 +906,18 @@ const triggerFileUpload = () => {
     </UTable>
     <div
       v-if="logsBodyObj.length > 0"
-      class="flex justify-center px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
+      class="flex justify-between items-center px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
     >
+      <div class="flex items-center gap-2">
+        <span class="text-sm text-gray-500 dark:text-gray-400">Rows per page:</span>
+        <USelectMenu
+          v-model="pageCount"
+          :options="pageCountOptions"
+          class="w-24"
+        />
+      </div>
       <UPagination
+        v-if="pageCount !== 'ALL'"
         v-model="page"
         :max="12"
         :page-count="pageCount"
@@ -913,6 +925,9 @@ const triggerFileUpload = () => {
         show-last
         show-first
       />
+      <div v-else class="text-sm text-gray-500 dark:text-gray-400">
+        Showing all {{ filteredRows.length }} rows
+      </div>
     </div>
   </UDashboardPanelContent>
 </template>
